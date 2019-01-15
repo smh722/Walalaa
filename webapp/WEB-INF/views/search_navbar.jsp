@@ -27,7 +27,6 @@
 	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script>
 </head>
 	<script>
-		  //ko
 	</script>
 
 <body>
