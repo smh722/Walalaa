@@ -45,8 +45,8 @@
 			<li role="presentation" class=""><a href="#BadWordManage"
 				id="BadWordManage-tab" role="tab" data-toggle="tab"
 				aria-controls="BadWordManage" aria-expanded="false">비속어 단어 관리</a></li>
-			<li role="presentation" class=""><a href="#Analysis" role="tab"
-				id="Analysis-tab" data-toggle="tab" aria-controls="Analysis"
+			<li role="presentation" class=""><a href="#analysis" role="tab"
+				id="analysis-tab" data-toggle="tab" aria-controls="analysis"
 				aria-expanded="false">분석</a></li>
 		</ul>
 		<div id="myTabContent" class="tab-content">
@@ -62,9 +62,9 @@
 				aria-labelledby="BadWordManage-tab">
 			<jsp:include page="/WEB-INF/views/manage_include/BadWordManage.jsp"></jsp:include>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="Analysis"
-				aria-labelledby="Analysis-tab">
-				<p>Analysis content</p>
+			<div role="tabpanel" class="tab-pane fade" id="analysis"
+				aria-labelledby="analysis-tab">
+			<jsp:include page="/WEB-INF/views/manage_include/analysis.jsp"></jsp:include>
 			</div>
 		</div>
 

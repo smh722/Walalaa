@@ -30,6 +30,10 @@ public class UserController {
 	public String manage() {
 		return "manage";
 	}
+	@RequestMapping(value ="broadcast.do", method = RequestMethod.GET)
+	public String broadcast() {
+		return "chatting";
+	}
 
 	@RequestMapping(value ="joininsert.do", method = RequestMethod.POST)
 	public String insertUser(@ModelAttribute UserVO vo) {
@@ -52,11 +56,11 @@ public class UserController {
 				session.setAttribute("nickname", vo2.getNickname());
 				return "list.do";
 			} else {
-				session.setAttribute("error", "鍮꾨�踰덊샇媛� 留욎��븡�뒿�땲�떎");
+				session.setAttribute("error", "에");
 				return "loginform";
 			}
 		} else {
-			session.setAttribute("error", "�븘�씠�뵒媛� 留욎��븡�뒿�땲�떎");
+			session.setAttribute("error", "엘");
 			return "loginform";
 		}
 	}

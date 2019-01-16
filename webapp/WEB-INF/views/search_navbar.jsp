@@ -27,7 +27,9 @@
 	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script>
 </head>
 	<script>
-	//??????
+	function broadcast(){
+		location.href="broadcast.do";
+	}
 	</script>
 
 <body>
