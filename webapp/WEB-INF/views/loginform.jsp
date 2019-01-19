@@ -1,91 +1,72 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<link rel="stylesheet" href="css/styles.css" type="text/css"
-	charset="utf-8" />
-<link href="/Walala2019/src/main/webapp/bootstrap/css/bootstrap.min.css"
-	rel="stylesheet">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ìœ„ 3ê°œì˜ ë©”íƒ€ íƒœê·¸ëŠ” *ë°˜ë“œì‹œ* head íƒœê·¸ì˜ ì²˜ìŒì— ì™€ì•¼í•©ë‹ˆë‹¤; ì–´ë–¤ ë‹¤ë¥¸ ì½˜í…ì¸ ë“¤ì€ ë°˜ë“œì‹œ ì´ íƒœê·¸ë“¤ *ë‹¤ìŒì—* ì™€ì•¼ í•©ë‹ˆë‹¤ -->
 
-<!-- jQuery (ºÎÆ®½ºÆ®·¦ÀÇ ÀÚ¹Ù½ºÅ©¸³Æ® ÇÃ·¯±×ÀÎÀ» À§ÇØ ÇÊ¿äÇÕ´Ï´Ù) -->
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+<!-- ë¶€íŠ¸ìŠ¤íŠ¸ë© -->
+<link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-<!-- ¸ğµç ÄÄÆÄÀÏµÈ ÇÃ·¯±×ÀÎÀ» Æ÷ÇÔÇÕ´Ï´Ù (¾Æ·¡), ¿øÇÏÁö ¾Ê´Â´Ù¸é ÇÊ¿äÇÑ °¢°¢ÀÇ ÆÄÀÏÀ» Æ÷ÇÔÇÏ¼¼¿ä -->
+<!-- jQuery (ë¶€íŠ¸ìŠ¤íŠ¸ë©ì˜ ìë°”ìŠ¤í¬ë¦½íŠ¸ í”ŒëŸ¬ê·¸ì¸ì„ ìœ„í•´ í•„ìš”í•©ë‹ˆë‹¤) -->
+<script type="text/javascript"	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+
+<!-- ëª¨ë“  ì»´íŒŒì¼ëœ í”ŒëŸ¬ê·¸ì¸ì„ í¬í•¨í•©ë‹ˆë‹¤ (ì•„ë˜), ì›í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ í•„ìš”í•œ ê°ê°ì˜ íŒŒì¼ì„ í¬í•¨í•˜ì„¸ìš” -->
+<%-- <script	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script> --%>
 <script src="js/bootstrap.min.js"></script>
-<style>
-table.loginform_table {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	width: 100%;
-	max-width: 100%;
-}
+	<style>
+		form.form-inline>div {
+			padding: 10px 0px 10px 0px;
+		}
+	
+		.pageset {
+			width: 1080px;
+			margin: 0 auto;
+		}
+		h1 {
+			text-align: center;
+		}
+		label{
+			width: 200px;
+			text-align: center;
+		}
+		.loginformdiv{
+			border-top: 1px solid lightgray;
+			border-top-style: dotted;
+		}
+	</style>
 
-tr td {
-	padding-bottom: 15px;
-}
-
-td.loginformlist {
-	text-align: center;
-}
-
-div.loginform_main {
-	position: absolute;
-	top: 10%;
-	left: 30%;
-	width: 40%;
-}
-</style>
-<title>·Î±×ÀÎÆäÀÌÁö</title>
+<title>ë¡œê·¸ì¸í˜ì´ì§€</title>
 </head>
 <body>
 
 	<jsp:include page="search_navbar.jsp"></jsp:include>
-
-	<div class="loginform_main" style="margin: 100px; text-align: center">
-		<h1>·Î±×ÀÎ</h1>
-		<hr>
-		<form class="form-horizontal">
-			<table class='loginform_table'>
-				<tr>
-					<td class="loginformlist">
-						<div class="form-group">
-							<label for="inputEmail" class="col-sm-2 control-label">Email</label>
-						</div>
-					</td>
-					<td>
-						<div class="col-sm-10">
-							<input type="email" class="form-control" id="inputEmail"
-								placeholder="example@example.com">
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="loginformlist">
-						<div class="form-group">
-							<label for="inputPassword"
-								class="col-sm-2 control-label loginformlist">Password</label>
-						</div>
-					</td>
-					<td>
-						<div class="col-sm-10">
-							<input type="password" class="form-control" id="inputPasswor3"
-								placeholder="Password">
-						</div>
-					</td>
-				</tr>
-			</table>
-			<%
-				if (session.getAttribute("error") != null) {
-			%>
-			<%=session.getAttribute("error")%>
-			<%
-				}
-			%><a href="joinform.do">È¸¿ø°¡ÀÔ</a> <a href="findpasswordform.do">ºñ¹Ğ¹øÈ£Ã£±â</a>
-			<button type="submit" class="btn btn-primary">·Î±×ÀÎ</button>
-		</form>
+	
+	
+	<div class="pageset">
+		<h1>ë¡œê·¸ì¸</h1>
+		<div class="loginformdiv" align="center">
+			<form class="form-inline" name="loginform" action="login.do" method="post">
+				<div class="form-group">
+					<label for="inputEmail" class="control-label">Email</label>
+					<input type="email" class="form-control" style="width: 360px;" id="inputEmail" placeholder="example@example.com">
+				</div>
+			<br>
+				<div class="form-group">
+					<label for="inputPassword" class="control-label loginformlist" >Password</label>
+					<input type="password" class="form-control" style="width: 360px;" id="inputPasswor3" placeholder="Password" >
+				</div>
+			<br>
+				<div class="form-group" align="center">	
+					<a href="joinform.do">íšŒì›ê°€ì…</a>
+					<a href="findpasswordform.do">ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°</a>
+					<button type="submit" class="btn btn-primary">ë¡œê·¸ì¸</button>
+				</div>	
+			</form>
+		</div>
 	</div>
 
 </body>

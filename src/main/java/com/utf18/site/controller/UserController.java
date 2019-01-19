@@ -12,40 +12,62 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.utf18.site.service.UserService;
 import com.utf18.site.vo.UserVO;
 
-
 @Controller
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping(value ="joinform.do", method = RequestMethod.GET)
-	public String loginForm() {
-		return "joinform";
-	}
-	@RequestMapping(value ="main.do", method = RequestMethod.GET)
+
+	@RequestMapping(value = "main.do", method = RequestMethod.GET)
 	public String main() {
 		return "main";
 	}
-	@RequestMapping(value ="manage.do", method = RequestMethod.GET)
+
+	@RequestMapping(value = "manage_user_chatting.do", method = RequestMethod.GET)
+	public String manage_user_chatting() {
+		return "manage_include/manage_user_chatting";
+	}
+
+	@RequestMapping(value = "manage.do", method = RequestMethod.GET)
 	public String manage() {
 		return "manage";
 	}
-	@RequestMapping(value ="broadcast.do", method = RequestMethod.GET)
-	public String broadcast() {
-		return "chatting";
+
+	@RequestMapping(value = "manage_user_broadcast.do", method = RequestMethod.GET)
+	public String manage_user_broadcast() {
+		return "manage_include/manage_user_broadcast";
 	}
 
-	@RequestMapping(value ="joininsert.do", method = RequestMethod.POST)
+	@RequestMapping(value = "broadcast.do", method = RequestMethod.GET)
+	public String broadcast() {
+		return "broadcast";
+	}
+
+	@RequestMapping(value = "broadcast_setting.do", method = RequestMethod.GET)
+	public String broadcast_setting() {
+		return "broadcast_setting";
+	}
+
+	@RequestMapping(value = "broadcast_finish.do", method = RequestMethod.GET)
+	public String broadcast_finish() {
+		return "broadcast_finish";
+	}
+
+	@RequestMapping(value = "joinform.do", method = RequestMethod.GET)
+	public String loginForm() {
+		return "joinform";
+	}
+
+	@RequestMapping(value = "joininsert.do", method = RequestMethod.POST)
 	public String insertUser(@ModelAttribute UserVO vo) {
 		userService.insertUser(vo);
 		return "loginpage";
 	}
-	
-	@RequestMapping(value ="loginform.do" , method = RequestMethod.GET)
+
+	@RequestMapping(value = "loginform.do", method = RequestMethod.GET)
 	public String joinForm() {
 		return "loginform";
 	}
-	
+
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
 	public String login(UserVO vo, HttpSession session) {
 		if (userService.getUserVO(vo) != null) {
@@ -64,18 +86,17 @@ public class UserController {
 			return "loginform";
 		}
 	}
-	
+
 	@RequestMapping("findpasswordform.do")
 	public String findPWform() {
 		return "findpassword";
 	}
-	
+
 	@RequestMapping("findpassword.do")
 	public String findpw(UserVO vo, Model model) {
 		vo = userService.getUserVO(vo);
 		model.addAttribute("password", vo.getPassword());
 		return "findpassword";
 	}
-	
 
 }

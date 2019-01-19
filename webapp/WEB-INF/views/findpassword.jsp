@@ -1,54 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<link rel="stylesheet" href="css/styles.css" type="text/css"
-	charset="utf-8" />
-<link href="/Walala2019/src/main/webapp/bootstrap/css/bootstrap.min.css"
-	rel="stylesheet">
+<meta charset="UTF-8">
 
-<!-- jQuery (ºÎÆ®½ºÆ®·¦ÀÇ ÀÚ¹Ù½ºÅ©¸³Æ® ÇÃ·¯±×ÀÎÀ» À§ÇØ ÇÊ¿äÇÕ´Ï´Ù) -->
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
-
-<!-- ¸ğµç ÄÄÆÄÀÏµÈ ÇÃ·¯±×ÀÎÀ» Æ÷ÇÔÇÕ´Ï´Ù (¾Æ·¡), ¿øÇÏÁö ¾Ê´Â´Ù¸é ÇÊ¿äÇÑ °¢°¢ÀÇ ÆÄÀÏÀ» Æ÷ÇÔÇÏ¼¼¿ä -->
+<link rel="stylesheet" href="css/styles.css" type="text/css" charset="utf-8" />
+<link href="/Walala2019/src/main/webapp/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- jQuery (ë¶€íŠ¸ìŠ¤íŠ¸ë©ì˜ ìë°”ìŠ¤í¬ë¦½íŠ¸ í”ŒëŸ¬ê·¸ì¸ì„ ìœ„í•´ í•„ìš”í•©ë‹ˆë‹¤) -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+<!-- ëª¨ë“  ì»´íŒŒì¼ëœ í”ŒëŸ¬ê·¸ì¸ì„ í¬í•¨í•©ë‹ˆë‹¤ (ì•„ë˜), ì›í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ í•„ìš”í•œ ê°ê°ì˜ íŒŒì¼ì„ í¬í•¨í•˜ì„¸ìš” -->
 <script src="js/bootstrap.min.js"></script>
-<style>
-table.findpassword_table {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	width: 100%;
-	max-width: 100%;
-}
 
-tr td {
-	padding-bottom: 15px;
-}
-
-td.findpasswordlist {
-	text-align: center;
-}
-
-div.findpassword_main {
-	position: absolute;
-	top: 10%;
-	left: 30%;
-	width: 40%;
-}
-</style>
-<title>ºñ¹Ğ¹øÈ£ Ã£±â</title>
+	<style>
+		table.findpassword_table {
+			margin: 20px auto;
+			width: 80%;
+		}
+		
+		tr td {
+			padding-bottom: 15px;
+		}
+		td.findpasswordlist {
+			text-align: center;
+		}
+		.pageset {
+			width: 1080px;
+			margin: 0 auto;
+		}
+		h1 {
+			text-align: center;
+		}
+	</style>
+<title>ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸°</title>
 </head>
 <body>
 
 	<jsp:include page="search_navbar.jsp"></jsp:include>
-	<div class="findpassword_main"
-		style="margin: 100px; text-align: center">
-		<h2>ºñ¹Ğ¹øÈ£ Ã£±â</h2>
+	
+	<div class="pageset">
+		<h1>ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸°</h1>
 		<hr>
 		<form action="findpassword.do" method="post">
-			<table class="findpasswordlist">
+			<table class="findpassword_table">
 				<tr>
 					<td class="findpasswordlist">
 						<div class="form-group">
@@ -57,8 +51,7 @@ div.findpassword_main {
 					</td>
 					<td>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="inputEmail"
-								name="email" placeholder="example@example.com">
+							<input type="email" class="form-control" id="inputEmail" name="email" placeholder="example@example.com">
 						</div>
 					</td>
 				</tr>
@@ -72,9 +65,14 @@ div.findpassword_main {
  %>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<button type="submit" class="btn btn-primary">ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°</button>
+						<a href="loginform.do">ë¡œê·¸ì¸í˜ì´ì§€</a>		
+					</td>
+				</tr>
 			</table>
-			<input type="submit" class="btn100 rounded" value="ºñ¹Ğ¹øÈ£Ã£±â" /> <a
-				href="loginform.do" class="btn_a100 rounded">·Î±×ÀÎÆäÀÌÁö</a>
+			
 		</form>
 	</div>
 </body>

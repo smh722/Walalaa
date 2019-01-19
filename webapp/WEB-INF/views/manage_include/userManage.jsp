@@ -1,74 +1,108 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+   pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <style>
 body {
-	padding: 0px;
-	margin: 0px;
+   padding: 0px;
+   margin: 0px;
 }
 
 table.user_table {
-	border-collapse: collapse;
-	margin: 5px;
-	border-bottom: solid 1px;
-	border-bottom-color: lightgray;
-	width: 99%;
-	height: 80%;
-	font-size: 15px;
-	text-align: center;
+   border-collapse: collapse;
+   margin: 5px;
+   border-bottom: solid 1px;
+   border-bottom-color: lightgray;
+   width: 99%;
+   font-size: 15px;
+   text-align: center;
 }
 
 table thead.menubar {
-	border-bottom: solid 1px;
-	border-bottom-color: lightgray;
+   border-bottom: solid 1px;
+   border-bottom-color: lightgray;
 }
 
 table th {
-	text-align: center;
-	margin-bottom: 5px;
+   text-align: center;
+   margin-bottom: 5px;
 }
 
 tr.user_list td {
-	text-align: center;
-	font-size: 13px;
+   text-align: center;
+   font-size: 15px;
+   font-weight: 600;
 }
 
 .manage_area {
-	height: 500px;
-	font-size: 15px;
-	font-weight: 600;
-	text-align: center;
+   font-size: 15px;
+   font-weight: 600;
+   text-align: center;
 }
 
 a {
-	text-decoration: none;
-	color: rgb(24, 21, 21);
+   text-decoration: none;
+   color: rgb(24, 21, 21);
 }
 </style>
 
 
 </head>
 <div>
-	<table class="user_table">
-		<thead class="menubar">
-			<tr>
-				<th class='col-xs-4'>���� ������</th>
-				<th class='col-xs-4'>��������Ʈ</th>
-				<th class='col-xs-4'>��ڸ���Ʈ</th>
-			</tr>
-		</thead>
-		<!-- socket.io �̿��ؼ� div �ȿ� �ڵ����� ä��-->
-		<tr class="user_list">
-			<td><div id="userlist" class="manage_area">
-					<a href="/WEB-INF/views/manage_include/manage_user_chatting.jsp"> ��û��</a>
-				</div></td>
-			<td><div id="blacklist" class="manage_area">���۽�û��</div></td>
-			<td><div id="managerlist" class="manage_area">�Ƿ���1</div></td>
-		</tr>
+   <table class="user_table">
+      <thead class="menubar">
+         <tr>
+            <th class='col-xs-4'>현재 접속중</th>
+            <th class='col-xs-4'>블랙리스트</th>
+            <th class='col-xs-4'>운영자리스트</th>
+         </tr>
+      </thead>
+      <!-- socket.io 이용해서 div 안에 자동으로 채움-->
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
+      <tr class="user_list">
+         <td>
+               <a href="manage_user_chatting.do">시청자</a>
+         </td>
+         <td>나쁜시청자</td>
+         <td>권력자1</td>
+      </tr>
 
-	</table>
+   </table>
 </div>
 
 </html>
