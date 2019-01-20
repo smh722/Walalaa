@@ -70,7 +70,7 @@
 		margin-top: 205px;
 		margin-left: 205px;
 		}
-</style>
+	</style>
 
 </head>
 <body>
@@ -85,8 +85,8 @@
 						<input type="text" class="form-control" id="exampleInputName2" style="width: 500px;" value="배그 랭킹1위 막창사랑님의 방송>< 다 드루와~~">					
 				</div>
 				<div class="form-group">
-						<label for="exampleInputEmail2">설정:</label>
-						<input type="text" class="form-control" id="exampleInputName2" style="width: 500px; height: 80px;" value="배그 랭킹1위 막창사랑이 와뜨아! 지리는 에임, 스크림 최다릴 보유!! 지금 현재 킬당 만원 미션즁">
+						<label for="exampleInputEmail2">설명:</label>
+						<textarea class="form-control" rows="3" style="width: 500px;">배그 랭킹1위 막창사랑이 와뜨아! 지리는 에임, 스크림 최다릴 보유!! 지금 현재 킬당 만원 미션즁</textarea>
 				</div>
 				<div class="form-inline form-group">
 					<label for="exampleInputName2">썸네일: </label>

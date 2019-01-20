@@ -15,7 +15,6 @@
 <script type="text/javascript"	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
 
 <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
-<%-- <script	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script> --%>
 <script src="js/bootstrap.min.js"></script>
 	<style>
 		form.form-inline>div {

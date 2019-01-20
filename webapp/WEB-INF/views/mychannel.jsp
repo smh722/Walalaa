@@ -25,15 +25,6 @@
 	}
 </script>
 <style type="text/css">
-	.btnopacity:hover .uploadbtn{
-		opacity: 1.0;
-	}
-	.uploadbtn{
- 		color: white;
- 		font-size: 16px;
- 		padding: 0px;
- 		width: 148px;
-	}	
 	.channelimage{
 		margin-left: auto;
 		margin-right: auto;
@@ -41,6 +32,7 @@
 		height: 150px;
 		background-color: grey;
 	}
+	
 	.profileimage{
 		display: inline;
 		float: left;
@@ -48,6 +40,14 @@
 		height: 150px;
 		position: relative;
 	}
+	.profilebg{
+		display: inline;
+		float: right;
+		width: 940px;
+		height: 150px; 
+		position: relative;
+	}
+		
 	.image{
 		width: 200px;
 		height: 150px;
@@ -66,6 +66,7 @@
 		transition: .5s ease;
 		backface-visibility: hidden;
 	}
+	
 	.middle {
 	  	transition: .5s ease;
 	  	opacity: 0;
@@ -76,12 +77,30 @@
 	  	-ms-transform: translate(-50%, -50%);
   		text-align: center;
 	}
+	.filebox {
+	  	transition: .5s ease;
+	  	opacity: 0;
+	  	position: absolute;
+	  	top: 50%;
+	  	left: 50%;
+	  	transform: translate(-50%, -50%);
+	  	-ms-transform: translate(-50%, -50%);
+  		text-align: center;
+	}	
+	
 	.profileimage:hover .middle {
  		 opacity: 1;
 	}
 	.profileimage:hover .image {
   		opacity: 0.3;
 	}
+	
+	.profilebg:hover .filebox {
+ 		 opacity: 1;
+	}
+	.profilebg:hover .image2 {
+  		opacity: 0.3;
+	}	
 	
 	.middle label { 
 		display: inline-block; 
@@ -107,17 +126,65 @@
 		clip:rect(0,0,0,0); 
 		border: 0; 
 	}
+
+	.filebox label { 
+		display: inline-block; 
+		padding: .5em .75em; 
+		color: #999; 
+		font-size: inherit; 
+		line-height: normal; 
+		vertical-align: middle; 
+		background-color: #fdfdfd; 
+		cursor: pointer; 
+		border: 1px solid #ebebeb; 
+		border-bottom-color: #e2e2e2; 
+		border-radius: .25em; 
+	} 
+	.filebox input[type="file"] { /* 파일 필드 숨기기 */ 
+		position: absolute; 
+		width: 1px; 
+		height: 1px; 
+		padding: 0; 
+		margin: -1px; 
+		overflow: hidden; 
+		clip:rect(0,0,0,0); 
+		border: 0; 
+	}	
+	
 	#uploadlabel{
 		margin-left: 140px;
 		width: 100px;
 	}
-	.profilebg{
-		display: inline;
-		float: right;
-		width: 940px;
-		height: 150px; 
-		position: relative;
-	}
+	#bglabel{
+		margin-left: 817px;
+		margin-top: 117px;
+		width: 120px;
+	}	
+		.scale {
+		  transform: scale(1);
+		  -webkit-transform: scale(1);
+		  -moz-transform: scale(1);
+		  -ms-transform: scale(1);
+		  -o-transform: scale(1);
+		  transition: all 0.3s ease-in-out;   /* 부드러운 모션을 위해 추가*/
+		}
+		.scale:hover {
+		  transform: scale(1.2);
+		  -webkit-transform: scale(1.2);
+		  -moz-transform: scale(1.2);
+		  -ms-transform: scale(1.2);
+		  -o-transform: scale(1.2);
+		}
+		.img_scale {/*width:325px; height:280px;*/ overflow:hidden }   /* 부모를 벗어나지 않고 내부 이미지만 확대 */
+		.boradbox{
+			width: 263px;
+			margin-right: 15px;
+		}
+		.pageset{
+			width: 1080px;
+			margin:0 auto;
+		}	
+	
 	
 </style>
 </head>
@@ -131,43 +198,129 @@
 				<img class="image" src="${pageContext.request.contextPath}/assets/images/user.png">
 				<div class="middle">
 					<form action="#">
-						<label id="uploadlabel"for="imgInp">업로드</label>
-						<input type="file" id="imgInp">
+						<label id="uploadlabel"for="proimg">업로드</label>
+						<input type="file" id="proimg">
 					</form>
 				</div>
 		</div>
 		<div class="profilebg">
-			<img class="image2" src="${pageContext.request.contextPath}/assets/images/knowsmore.jpg">
-			<div class="middle">
+			<img class="image2" src="${pageContext.request.contextPath}/assets/images/knowsmore.png">
+			<div class="filebox">
 					<form action="#">
-						<label id="uploadlabel"for="imgInp">업로드</label>
-						<input type="file" id="imgInp">
+						<label id="bglabel"for="bgimg">업로드</label>
+						<input type="file" id="bgimg">
 					</form>
 			</div>
 		</div>
 	</div>
 
-	<div class="container">
-		<h3>녹화된영상</h3>
-		<hr>
-		<div class="row">
-			<div class="col-sm-3">
-				<div class="thumbnail">
-					<a href="main.do"> <img
-						src="${pageContext.request.contextPath}/assets/images/battleground.jpg"
-						class="img-responsive" alt="썸네일 "></a>
-					<div class="caption">
-						<h4>[RickyTV] 사녹에서 치킨먹기</h4>
-						<p>RickyOffical</p>
-						조회수 5만회
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7분전
-						<!--            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div class="pageset">
+  	 <h3>녹화된영상</h3>
+      <div class="row" style="display: flex;">
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 4분전</p>
+               </div>
+            </div>
+         </div>
 
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 <span>7분전</span></p>
+               </div>
+            </div>
+         </div>
+
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 7분전</p>
+               </div>
+            </div>
+         </div>
+
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 7분전</p>
+               </div>
+            </div>
+         </div>
+
+    </div>
+		
+	
+      <div class="row" style="display: flex;">
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 4분전</p>
+               </div>
+            </div>
+         </div>
+
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 <span>2분전</span></p>
+               </div>
+            </div>
+         </div>
+
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 7분전</p>
+               </div>
+            </div>
+         </div>
+
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do">
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 7분전</p>
+               </div>
+            </div>
+         </div>
+
+        
+         
+		</div>
+  	</div>
 </body>
 
 </html>

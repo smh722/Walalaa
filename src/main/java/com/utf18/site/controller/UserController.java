@@ -35,12 +35,6 @@ public class UserController {
 	public String mychannel() {
 		return "mychannel";
 	}
-	
-	@RequestMapping(value = "profile.do", method = RequestMethod.GET)
-	public String profile() {
-		return "profile";
-	}
-	
 	@RequestMapping(value = "manage_user_broadcast.do", method = RequestMethod.GET)
 	public String manage_user_broadcast() {
 		return "manage_include/manage_user_broadcast";

@@ -11,20 +11,12 @@
 <title>관리자 창</title>
 
 <!-- 부트스트랩 -->
-<link
-	href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css"
-	rel="stylesheet">
-
-<!-- 내 CSS -->
-<link href="${pageContext.request.contextPath}/assets/css/manage.css"
-	rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
 <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
 <script src="js/bootstrap.min.js"></script>
-<%-- <script	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script> --%>
 	
 </head>
 
@@ -36,34 +28,30 @@
 		<!-- 아코디언 패널이 표시되는 경우는 true로, 숨겨지는 경우는 false로 표시합니다.
 			 예: <button aria-expanded=”true”> (아코디언 패널이 확장된 경우) -->
 		<ul id="myTab" class="nav nav-tabs" role="tablist">
-			<li role="presentation" class="active"><a href="#objectionList"
-				id="objectionList-tab" role="tab" data-toggle="tab"
-				aria-controls="objectionList" aria-expanded="true">이의제기 신청 목록</a></li>
-			<li role="presentation" class=""><a href="#userManage"
-				role="tab" id="userManage-tab" data-toggle="tab"
-				aria-controls="userManage" aria-expanded="false">사용자 관리</a></li>
-			<li role="presentation" class=""><a href="#BadWordManage"
-				id="BadWordManage-tab" role="tab" data-toggle="tab"
-				aria-controls="BadWordManage" aria-expanded="false">비속어 단어 관리</a></li>
-			<li role="presentation" class=""><a href="#analysis" role="tab"
-				id="analysis-tab" data-toggle="tab" aria-controls="analysis"
-				aria-expanded="false">분석</a></li>
+			<li role="presentation" class="active">
+				<a href="#objectionList"	id="objectionList-tab" role="tab" data-toggle="tab"	aria-controls="objectionList" aria-expanded="true">
+				이의제기 신청 목록</a></li>
+			<li role="presentation" class="">
+				<a href="#userManage" role="tab" id="userManage-tab" data-toggle="tab" aria-controls="userManage" aria-expanded="false">
+				사용자 관리</a></li>
+			<li role="presentation" class="">
+				<a href="#BadWordManage" id="BadWordManage-tab" role="tab" data-toggle="tab" aria-controls="BadWordManage" aria-expanded="false">
+				비속어 단어 관리</a></li>
+			<li role="presentation" class="">
+				<a href="#analysis" role="tab" id="analysis-tab" data-toggle="tab" aria-controls="analysis"	aria-expanded="false">
+				분석</a></li>
 		</ul>
 		<div id="myTabContent" class="tab-content">
-			<div role="tabpanel" class="tab-pane fade active in" id="objectionList"
-				aria-labelledby="objectionList-tab">
+			<div role="tabpanel" class="tab-pane fade active in" id="objectionList"	aria-labelledby="objectionList-tab">
 				<jsp:include page="/WEB-INF/views/manage_include/objectionList.jsp"></jsp:include>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="userManage"
-				aria-labelledby="userManage-tab">
+			<div role="tabpanel" class="tab-pane fade" id="userManage" aria-labelledby="userManage-tab">
 				<jsp:include page="/WEB-INF/views/manage_include/userManage.jsp"></jsp:include>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="BadWordManage"
-				aria-labelledby="BadWordManage-tab">
-			<jsp:include page="/WEB-INF/views/manage_include/BadWordManage.jsp"></jsp:include>
+			<div role="tabpanel" class="tab-pane fade" id="BadWordManage" aria-labelledby="BadWordManage-tab">
+				<jsp:include page="/WEB-INF/views/manage_include/BadWordManage.jsp"></jsp:include>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="analysis"
-				aria-labelledby="analysis-tab">
+			<div role="tabpanel" class="tab-pane fade" id="analysis" aria-labelledby="analysis-tab">
 			<jsp:include page="/WEB-INF/views/manage_include/analysis.jsp"></jsp:include>
 			</div>
 		</div>
