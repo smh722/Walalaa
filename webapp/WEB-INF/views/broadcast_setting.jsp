@@ -176,17 +176,22 @@
 			<br>
 
 			<div class="form-group">
-				<label for="exampleInputName2">공개 범위:</label>
-				<input type="radio"	name="scope">공개 <input type="radio" name="scope">비공개
+				<fieldset id="setting_radio1">
+					<label for="exampleInputName2">공개 범위:</label>
+					<input type="radio"	name="setting_radio1">공개
+					<input type="radio" name="setting_radio1">비공개
+				</fieldset>
 			</div>
 			<br>
 
 			<div class="form-group">
-				<label for="exampleInputName2">실시간 채팅:</label>
-				<input type="radio" name="scope">활성화
-				<input type="radio" name="scope">비활성화
+				<fieldset id="setting_radio2">
+					<label for="exampleInputName2">실시간 채팅:</label>
+					<input type="radio" name="setting_radio2">활성화
+					<input type="radio" name="setting_radio2">비활성화
 				<input value="고급설정" onclick="if(this.parentNode.getElementsByTagName('div')[0].style.display != ''){this.parentNode.getElementsByTagName('div')[0].style.display = '';this.value = '숨기기';}else{this.parentNode.getElementsByTagName('div')[0].style.display = 'none'; this.value = '고급설정';}"
 				type="button" />
+				</fieldset>
 				<div id='checkbox_div' style="display: none; border: 1px solid">
 					<input type="checkbox" name='mycheck' onclick="check_all();" value='all' />전체<br />
 					<input type="checkbox" name='mycheck' onclick="not_check();" value='badword'>비속어<br>
