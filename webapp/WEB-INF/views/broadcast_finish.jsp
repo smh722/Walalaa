@@ -51,16 +51,24 @@
 			width: 90%;
 			margin-left: 5px;
 		}
-		form.form-inline>div {
-			padding: 10px 0px 10px 0px;
+		
+		form.form-inline>div>div{
+			padding: 5px 0px 5px 0px;
 		}
+		
 		label{
-			width: 70px;
+			width: 100px;
 			text-align: right;
 			margin-right: 30px;
 		}
 		.btn-file{
-			width: 360px;
+			width: 500px;
+		}
+		#save {
+		height: 50px;
+		width: 70px;
+		margin-top: 205px;
+		margin-left: 205px;
 		}
 </style>
 
@@ -69,54 +77,54 @@
 	<jsp:include page="/WEB-INF/views/search_navbar.jsp"></jsp:include>
 
 	<div class="pageset">
-		<form class="form-inline" name="save_broad" action="">
+		<form class="form-inline" name="save_broad" style="display: flex;"action="">
 		<div class="infopage">
 				<h2>영상 정보</h2>
 				<div class="form-group">
 						<label for="exampleInputName2">제목: </label>
-						<input type="text" class="form-control" id="exampleInputName2" style="width: 360px;" value="배그 랭킹1위 막창사랑님의 방송>< 다 드루와~~">					
+						<input type="text" class="form-control" id="exampleInputName2" style="width: 500px;" value="배그 랭킹1위 막창사랑님의 방송>< 다 드루와~~">					
 				</div>
 				<div class="form-group">
 						<label for="exampleInputEmail2">설정:</label>
-						<input type="text" class="form-control" id="exampleInputName2" style="width: 360px;" value="배그 랭킹1위 막창사랑이 와뜨아! 지리는 에임, 스크림 최다릴 보유!! 지금 현재 킬당 만원 미션즁">
+						<input type="text" class="form-control" id="exampleInputName2" style="width: 500px; height: 80px;" value="배그 랭킹1위 막창사랑이 와뜨아! 지리는 에임, 스크림 최다릴 보유!! 지금 현재 킬당 만원 미션즁">
 				</div>
 				<div class="form-inline form-group">
 					<label for="exampleInputName2">썸네일: </label>
 					<span class="btn btn-default btn-file">
 						<input type="file" id="imgInp">
-						<img id="blah" src="${pageContext.request.contextPath}/assets/images/game_screen.png" alt="(권장)500*300" style="width: 358px;">
+						<img id="blah" src="${pageContext.request.contextPath}/assets/images/game_screen.png" alt="(권장)500*300" style="width: 480px;">
 					</span>
 				</div>
 				<div class="form-group">
 						<label for="exampleInputEmail2">방송시간:</label>
 						<input type="text" class="form-control" id="exampleInputName2" 
-						style="width: 360px;" value="1시간 29분 30초" readonly>
+						style="width: 500px;" value="1시간 29분 30초" readonly>
 				</div>
 				<div class="form-group">
 						<label for="exampleInputEmail2">최대화질:</label>
 						<input type="text" class="form-control" id="exampleInputName2" 
-						style="width: 360px;" value="1080p" readonly>
+						style="width: 500px;" value="1080p" readonly>
 				</div>
 				<div class="form-group">
 						<label for="exampleInputEmail2">누적 시청자수:</label>
 						<input type="text" class="form-control" id="exampleInputName2" 
-						style="width: 360px;" value="105명" readonly>
+						style="width: 500px;" value="105명" readonly>
 				</div>
 				<div class="form-group">
 						<label for="exampleInputEmail2">태그설정:</label>
-						<input type="text" class="form-control" id="exampleInputName2" style="width: 360px;" value="배그, 배틀그라운드, 막창사랑, 막사, 막창, 랭킹1위, 배그랭킹1위">
+						<input type="text" class="form-control" id="exampleInputName2" style="width: 500px;" value="배그, 배틀그라운드, 막창사랑, 막사, 막창, 랭킹1위, 배그랭킹1위">
 				</div>
-				<div class="form-group">
-					<label for="exampleInputName2">업로드:</label>
+				<div class="form-group" style="margin-right: 230px;">
 					<fieldset id="save_radio1">
+						<label for="exampleInputName2">업로드:</label>
 						<input type="radio"	name="save_radio1">공개
 						<input type="radio" name="save_radio1">비공개
 						<input type="radio" name="save_radio1">예약
 					</fieldset>
 				</div>
 				<div class="form-group">
-					<label for="exampleInputName2">업로드:</label>
 					<fieldset id="save_radio2">
+						<label for="exampleInputName2">저장:</label>
 						<input type="radio"	name="save_radio2">저장
 						<input type="radio" name="save_radio2">저장안함
 					</fieldset>

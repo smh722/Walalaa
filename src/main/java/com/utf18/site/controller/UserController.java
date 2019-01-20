@@ -31,7 +31,16 @@ public class UserController {
 	public String manage() {
 		return "manage";
 	}
-
+	@RequestMapping(value = "mychannel.do", method = RequestMethod.GET)
+	public String mychannel() {
+		return "mychannel";
+	}
+	
+	@RequestMapping(value = "profile.do", method = RequestMethod.GET)
+	public String profile() {
+		return "profile";
+	}
+	
 	@RequestMapping(value = "manage_user_broadcast.do", method = RequestMethod.GET)
 	public String manage_user_broadcast() {
 		return "manage_include/manage_user_broadcast";
@@ -78,11 +87,11 @@ public class UserController {
 				session.setAttribute("nickname", vo2.getNickname());
 				return "list.do";
 			} else {
-				session.setAttribute("error", "에");
+				session.setAttribute("error", "�뿉");
 				return "loginform";
 			}
 		} else {
-			session.setAttribute("error", "엘");
+			session.setAttribute("error", "�뿕");
 			return "loginform";
 		}
 	}

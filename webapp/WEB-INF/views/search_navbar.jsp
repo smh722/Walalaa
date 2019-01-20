@@ -117,15 +117,13 @@
 					<button class="btn btn-secondary dropdown-toggle" type="button"
 						id="dropdownMenuButton" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false">
-						<img alt="유저이미지"
-							src="${pageContext.request.contextPath}/assets/images/user.png">
+						<img alt="유저이미지" src="${pageContext.request.contextPath}/assets/images/user.png">
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 						<ul>
-							<li><a class="dropdown-item" href="#">내 채널</a></li>
+							<li><a class="dropdown-item" href="mychannel.do">내 채널</a></li>
 							<li><a class="dropdown-item" href="#">마이페이지</a></li>
 							<li><a class="dropdown-item" href="#">로그아웃</a></li>
-							<li><a class="dropdown-item" href="#">회원탈퇴</a></li>
 						</ul>
 					</div>
 				</div>

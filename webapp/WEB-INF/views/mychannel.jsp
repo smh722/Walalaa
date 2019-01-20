@@ -8,21 +8,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
-<title>유상형채널</title>
+<title>MyChannel</title>
 
 <!-- 부트스트랩 -->
-<link
-	href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css"
-	rel="stylesheet">
-<link href="${pageContext.request.contextPath}/assets/css/bit.css"
-	rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
 <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
-<script
-	src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	function popupOpen() {
 		var popUrl = "profile.do";
@@ -30,37 +24,126 @@
 		window.open(popUrl, "", popOption);
 	}
 </script>
+<style type="text/css">
+	.btnopacity:hover .uploadbtn{
+		opacity: 1.0;
+	}
+	.uploadbtn{
+ 		color: white;
+ 		font-size: 16px;
+ 		padding: 0px;
+ 		width: 148px;
+	}	
+	.channelimage{
+		margin-left: auto;
+		margin-right: auto;
+		width: 1140px;
+		height: 150px;
+		background-color: grey;
+	}
+	.profileimage{
+		display: inline;
+		float: left;
+		width: 200px;
+		height: 150px;
+		position: relative;
+	}
+	.image{
+		width: 200px;
+		height: 150px;
+		position: absolute;
+		opacity: 1;
+		display: block;
+		transition: .5s ease;
+		backface-visibility: hidden;
+	}
+	.image2{
+		width: 940px;
+		height: 150px;
+		position: absolute;
+		opacity: 1;
+		display: block;
+		transition: .5s ease;
+		backface-visibility: hidden;
+	}
+	.middle {
+	  	transition: .5s ease;
+	  	opacity: 0;
+	  	position: absolute;
+	  	top: 50%;
+	  	left: 12%;
+	  	transform: translate(-50%, -50%);
+	  	-ms-transform: translate(-50%, -50%);
+  		text-align: center;
+	}
+	.profileimage:hover .middle {
+ 		 opacity: 1;
+	}
+	.profileimage:hover .image {
+  		opacity: 0.3;
+	}
+	
+	.middle label { 
+		display: inline-block; 
+		padding: .5em .75em; 
+		color: #999; 
+		font-size: inherit; 
+		line-height: normal; 
+		vertical-align: middle; 
+		background-color: #fdfdfd; 
+		cursor: pointer; 
+		border: 1px solid #ebebeb; 
+		border-bottom-color: #e2e2e2; 
+		border-radius: .25em; 
+	} 
+	
+	.middle input[type="file"] { /* 파일 필드 숨기기 */ 
+		position: absolute; 
+		width: 1px; 
+		height: 1px; 
+		padding: 0; 
+		margin: -1px; 
+		overflow: hidden; 
+		clip:rect(0,0,0,0); 
+		border: 0; 
+	}
+	#uploadlabel{
+		margin-left: 140px;
+		width: 100px;
+	}
+	.profilebg{
+		display: inline;
+		float: right;
+		width: 940px;
+		height: 150px; 
+		position: relative;
+	}
+	
+</style>
 </head>
 <body>
 
+	<jsp:include page="/WEB-INF/views/search_navbar.jsp"></jsp:include>
 
 
-
-	<div
-		style="margin-left: auto; margin-right: auto; width: 1140px; height: 150px; background-color: grey;">
-
-		<div
-			style='display: inline; float: left; width: 200px; height: 150px; position: relative;'>
-
-			
-				<img src="${pageContext.request.contextPath}/assets/images/test.png"
-					style="width: 200px; height: 150px; position: absolute;">
-
-				<button type="button"
-					onclick="location.href='javascript:popupOpen();'"
-					style="position: absolute; top:50%; left:25%">이미지
-					업로드</button>
-			
-
-
+	<div class="channelimage">
+		<div class="profileimage">			
+				<img class="image" src="${pageContext.request.contextPath}/assets/images/user.png">
+				<div class="middle">
+					<form action="#">
+						<label id="uploadlabel"for="imgInp">업로드</label>
+						<input type="file" id="imgInp">
+					</form>
+				</div>
 		</div>
-
-		<div
-			style='display: inline; float: right; width: 940px; height: 150px; position: relative;'>
-			<a href="http://www.naver.com"
-				style="position: absolute; clear: left; left: 0; bottom: 0px;">채널이름설정</a>
-			<input class="form-control" type="button" value="이미지 업로드"
-				style="width: 150px; height: 30px; position: absolute; right: 0; bottom: 0px;">
+		<div class="profilebg">
+			<img class="image2" src="${pageContext.request.contextPath}/assets/images/knowsmore.jpg">
+			<div class="middle">
+					<form action="#">
+						<label id="uploadlabel"for="imgInp">업로드</label>
+						<input type="file" id="imgInp">
+					</form>
+			</div>
 		</div>
 	</div>
 
@@ -84,7 +167,7 @@
 			</div>
 		</div>
 	</div>
-	<button type="button" onclick="location.href='javascript:popupOpen();'">아이폰</button>
+
 </body>
 
 </html>
