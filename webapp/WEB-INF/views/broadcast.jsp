@@ -173,13 +173,20 @@
 
 
 
+
+
+
+
+
+
+
    <div id="box" class="box">
-      <script src="http://192.168.1.6:82/socket.io/socket.io.js"></script>
+      <script src="http://192.168.0.11:82/socket.io/socket.io.js"></script>
 <!--       <script src="https://code.jquery.com/jquery-1.11.1.js"></script>  없어도 될듯함-->
       <script>
          $(document).ready(
                function() {
-                  var socket = io("http://192.168.1.6:82");
+                  var socket = io("http://192.168.0.11:82");
 
                   $('#chat').on(
                         'submit',
