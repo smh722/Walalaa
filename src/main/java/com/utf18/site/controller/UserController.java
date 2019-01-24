@@ -63,7 +63,7 @@ public class UserController {
 	@RequestMapping(value = "joininsert.do", method = RequestMethod.POST)
 	public String insertUser(@ModelAttribute UserVO vo) {
 		userService.insertUser(vo);
-		return "loginpage";
+		return "loginform";
 	}
 
 	@RequestMapping(value = "loginform.do", method = RequestMethod.GET)

@@ -23,44 +23,50 @@
 
 	<style>
 		.scale {
-		  transform: scale(1);
-		  -webkit-transform: scale(1);
-		  -moz-transform: scale(1);
-		  -ms-transform: scale(1);
-		  -o-transform: scale(1);
-		  transition: all 0.3s ease-in-out;   /* 부드러운 모션을 위해 추가*/
+		   transform: scale(1);
+		   -webkit-transform: scale(1);
+		   -moz-transform: scale(1);
+		   -ms-transform: scale(1);
+		   -o-transform: scale(1);
+		   transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
 		}
+		
 		.scale:hover {
-		  transform: scale(1.2);
-		  -webkit-transform: scale(1.2);
-		  -moz-transform: scale(1.2);
-		  -ms-transform: scale(1.2);
-		  -o-transform: scale(1.2);
+		   transform: scale(1.2);
+		   -webkit-transform: scale(1.2);
+		   -moz-transform: scale(1.2);
+		   -ms-transform: scale(1.2);
+		   -o-transform: scale(1.2);
 		}
-		.img_scale {/*width:325px; height:280px;*/ overflow:hidden }   /* 부모를 벗어나지 않고 내부 이미지만 확대 */
-		.boradbox{
-			width: 263px;
-			margin-right: 15px;
+		
+		.img_scale { /*width:325px; height:280px;*/
+		   overflow: hidden
+		} /* 부모를 벗어나지 않고 내부 이미지만 확대 */
+		.boradbox {
+		   width: 263px;
+		   margin-right: 12px;
 		}
-		.pageset{
-			width: 1080px;
-			margin:0 auto;
+		
+		.pageset {
+		   width: 1080px;
+		   margin: 0 auto;
+		   margin-top: 30px;
 		}
 	</style>
 
 
 </head>
 <body>
-	<header>
-		<jsp:include page="search_navbar.jsp"></jsp:include>
-	</header>
- 
+   <header>
+      <jsp:include page="search_navbar.jsp"></jsp:include>
+   </header>
+
    <div class="pageset">
-  	 <h3>실시간 스트리밍</h3>
-      <div class="row" style="display: flex;">
+      <h3>실시간 스트리밍</h3>
+      <div class="row" style="display: flex; margin-left:0px;">
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -72,19 +78,7 @@
 
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
-               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
-               <div class="caption">
-                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
-                  <p>RickyOffical</p>
-                  <p>조회수 5만 <span>7분전</span></p>
-               </div>
-            </div>
-         </div>
-
-         <div class="boradbox img_scale">
-            <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -96,7 +90,7 @@
 
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -106,13 +100,24 @@
             </div>
          </div>
 
-    </div>
-		
-		<h3>인기 업로드</h3>
-      <div class="row" style="display: flex;">
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
+               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
+               <div class="caption">
+                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
+                  <p>RickyOffical</p>
+                  <p>조회수 5만 7분전</p>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <h3>인기 업로드</h3>
+      <div class="row" style="display: flex; margin-left:0px;">
+         <div class="boradbox img_scale">
+            <div class="thumbnail scale">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -124,19 +129,19 @@
 
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
                   <p>RickyOffical</p>
-                  <p>조회수 5만 <span>2분전</span></p>
+                  <p>조회수 5만 2분전</p>
                </div>
             </div>
          </div>
 
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -148,7 +153,7 @@
 
          <div class="boradbox img_scale">
             <div class="thumbnail scale">
-               <a href="broadcast.do">
+               <a href="broadcast.do"> 
                <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
                <div class="caption">
                   <h4>[RickyTV] 사녹에서 치킨먹기</h4>
@@ -157,12 +162,7 @@
                </div>
             </div>
          </div>
-
-        
-         
-		</div>
-  	</div>
-    
-
+      </div>
+   </div>
 </body>
 </html>

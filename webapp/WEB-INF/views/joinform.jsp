@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -19,61 +19,61 @@
 
 <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
 <script src="js/bootstrap.min.js"></script>
-<%-- <script   type="text/javascript" src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script> --%>
 
-	<style>
-		form.form-inline>div {
-			padding: 10px 0px 10px 0px;
-		}
-	
-		.pageset {
-			width: 1080px;
-			margin: 0 auto;
-		}
-		h1 {
-			text-align: center;
-		}
-		label{
-			width: 200px;
-			text-align: center;
-		}
-		.loginformdiv{
-			border-top: 1px solid lightgray;
-			border-top-style: dotted;
-		}
-	</style>
+   <style>
+      form.form-inline>div {
+         padding: 10px 0px 10px 0px;
+      }
+   
+      .pageset {
+         width: 1080px;
+         margin: 0 auto;
+      }
+      h1 {
+         text-align: center;
+      }
+      label{
+         width:100px; 
+         text-align: right; 
+         padding-right: 10px;
+      }
+      .loginformdiv{
+         border-top: 1px solid lightgray;
+         border-top-style: dotted;
+      }
+   </style>
 </head>
 
 <body>
-		<jsp:include page="search_navbar.jsp"></jsp:include>
-		
-		<div class="pageset">
-		<h1>회원가입</h1>
-		<div class="loginformdiv" align="center">
-			<form class="form-inline" name="joinform" action="joininsert.do" method="post">
-				<div class="form-group">
-					<label for="inputEmail" class="control-label">Email</label>
-					<input type="email" class="form-control" style="width: 360px;" id="inputEmail" placeholder="example@example.com">
-				</div>
-			<br>
-				<div class="form-group">
-					<label for="inputPassword" class="control-label joinformlist">Password</label>
-					<input type="password" class="form-control" style="width: 360px;" id="inputPasswor3" placeholder="Password">
-				</div>
-			<br>
-				<div class="form-group">
-					<label for="inputNickname" class="control-label joinformlist">Nickname</label>
-					<input type="text" class="form-control" style="width: 360px;" id="inputNickname" placeholder="Nick-name">
-				</div>
-			<br>
-				<div class="form-group" align="center">	
-					<button type="submit" class="btn btn-primary">회원가입</button>
-				</div>	
-			</form>
-		</div>
-	</div>
-	
-	
-	
-</body>
-</html>
+      <jsp:include page="search_navbar.jsp"></jsp:include>
+      
+      <div class="pageset">
+      <h1>회원가입</h1>
+      <div class="loginformdiv" align="center">
+         <form class="form-inline" name="joinform" action="joininsert.do" method="post">
+            <div class="form-group">
+               <label for="inputEmail" class="control-label">아이디 :</label>
+               <input style="width:280px" type="email" class="form-control" name="email" id="inputEmail" placeholder="example@example.com">
+            </div>
+         <br>
+            <div class="form-group">
+               <label for="inputPassword" class="control-label joinformlist">비밀번호 :</label>
+               <input style="width:280px" type="password" class="form-control" name="password" id="inputPassword" placeholder="Password">
+            </div>
+         <br>
+            <div class="form-group">
+               <label for="inputNickname" class="control-label joinformlist">닉네임 :</label>
+               <input style="width:280px" type="text" class="form-control" name="nickname" id="inputNickname" placeholder="Nick-name">
+            </div>
+         <br>
+            <div style="padding-bottom: 0px;">
+               <a href="loginform.do">로그인페이지</a>   
+            </div>
+            <div class="form-group" align="center">   
+               <button type="submit" class="btn btn-primary">회원가입</button>
+            </div>   
+         </form>
+      </div>
+   </div>
+   
+   

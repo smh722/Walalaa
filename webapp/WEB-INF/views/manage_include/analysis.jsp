@@ -6,8 +6,16 @@
 <head>
 <meta charset="utf-8">
 <title>관리자창 - 분석</title>
-<script type="text/javascript"
-	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<style type="text/css">
+	#analysisTable{
+		border-bottom: 1px solid lightgray;
+	}
+	#analysisTable>tbody>tr>td{
+		padding-bottom: 5px;
+	}
+</style>
+
 <script type="text/javascript">
 	//------------------- 차트 사용하기 위한 준비
 	google.charts.load('current', {
@@ -180,7 +188,7 @@
 </head>
 <body>
 	<!-- 차트 생성 구역 -->
-	<table>
+	<table id="analysisTable">
 		<tr>
 			<td><div id="curve_chart_chatting_amount" style="width: 550px; height: 300px"></div></td>
 			<td><div id="curve_chart_views_amount" style="width: 550px; height: 300px"></div></td>
