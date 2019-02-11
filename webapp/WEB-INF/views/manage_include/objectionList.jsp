@@ -12,7 +12,6 @@
 
     <!-- 부트스트랩 -->
     <link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-   <link href="${pageContext.request.contextPath}/assets/css/bit.css" rel="stylesheet">
    
     <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
@@ -171,6 +170,32 @@
             <!--반복-->
         </table>
     </div>   
-            
+    
+    
+    <script>
+    
+    $(function() {
+		timer = setInterval( function () {
+			var id = "";
+			id = $("#userId").val();
+					$.ajax({
+			            type : "post",
+			            url : "getObjList.do",
+				        async: true,
+			            data : id,
+			            success : function(warnCnt){
+			               
+			            $("#warnCnt").val("경고" + warnCnt + "회");
+			               
+			            },
+			            error : function(XHR, status, error) {
+			               console.error(status + " : " + error);
+			            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+			      
+			         });
+		}, 30000); // 1초에 한번씩 받아온다.
+	});
+    
+    </script>
 
 </html>

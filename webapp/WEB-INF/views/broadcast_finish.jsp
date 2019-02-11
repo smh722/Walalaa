@@ -8,16 +8,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
 <title>방송종료</title>
-<!-- 부트스트랩 -->
-<link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-
-<!-- 내 CSS -->
-<link href="${pageContext.request.contextPath}/assets/css/bit.css" rel="stylesheet">
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
 <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
-<script src="js/bootstrap.min.js"></script>
 
    <style>
       .pageset {
@@ -91,6 +85,8 @@
       <jsp:include page="search_navbar.jsp"></jsp:include>
    </header>
 
+   <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" /> <!-- 현재 유저가 접속한 방이름 -->
+	
    <div class="pageset">
       <form class="form-inline" name="save_broad" style="display: flex;"action="">
       <div class="infopage">
@@ -151,7 +147,7 @@
       <div class="chatpage">
          <h3>실시간 채팅 다시보기</h3>
             <div class="chatScreen">
-               <textarea id="chatLog" class="chat_log textarea" readonly></textarea>
+               <textarea id="chatLog" class="chat_log textarea" readonly ></textarea>
             </div>
             <div class="submit_btn" align="center">
                <input type="submit" id="save" value="확인" />
@@ -159,5 +155,41 @@
       </div>
       </form>
    </div>
+   
+   
+<script type="text/javascript">
+   
+
+      $(document).ready(function(){
+         //데이타요청(채팅방 리스트)aa
+		var num =  $("#roomNum").val();
+         alert(num);
+		var str = "";
+         $.ajax({
+            type: "post",
+            url : "getChatLog.do",
+            data : num,
+            contentType : "application/json",
+            dataType : "json",
+            success : function(logList){
+               console.log(logList);
+               var endNum = logList.length - 1;
+               for(var i=0; i<logList.length; i++){
+                     str += logList[i].email+" : "+logList[i].content+"\n";
+               }
+               $("#chatLog").val(str);
+            },
+            error : function(XHR, status, error) {
+               console.error(status + " : " + error);
+            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+      
+         });
+         //그리기 render사용as
+         
+      });
+      
+   
+      </script>
+ 
 </body>
 </html>

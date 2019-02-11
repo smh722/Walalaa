@@ -7,5 +7,6 @@
 
 	<mappers>
 		<mapper resource="mybatis/mappers/users_mapping.xml" />
+		<mapper resource="mybatis/mappers/chat_mapping.xml" />
 	</mappers>
 </configuration>
