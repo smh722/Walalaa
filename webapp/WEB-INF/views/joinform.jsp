@@ -38,7 +38,11 @@
       .loginformdiv{
          border-top: 1px solid lightgray;
          border-top-style: dotted;
+      }      
+      .loginformlist{
+      font-family: serif;
       }
+
    </style>
 
   
@@ -62,18 +66,10 @@
             success: function (data) {
                if(data == "S") {
                   alert("사용가능한 아이디입니다.");
-                  
-//                   $("#joinform").addClass("has-success")
-//                   $("#joinform").removeClass("has-error")
-                  
-                  $("#password").focus();
+                  $("#nickname").focus();
                   isCheckId = 1;
                } else {
                   alert("아이디가 존재합니다. 다른 아이디를 입력해주세요.");
-                  
-//                   $("#joinform").addClass("has-error")
-//                   $("#joinform").removeClass("has-success")
-                  
                   $("#email").focus();
                }
             },
@@ -182,14 +178,14 @@
             </div>
          <br>
             <div class="form-group">
-               <label for="password" class="control-label joinformlist">비밀번호 :</label>
-               <input style="width:280px" type="password" class="form-control" name="password" id="password" placeholder="Password">
+               <label for="nickname" class="control-label joinformlist">닉네임 :</label>
+               <input style="width:280px" type="text" class="form-control" name="nickname" id="nickname">
+               <input type="button" class="btn btn-primary" value="중복확인" onclick="duplicationNickname();"/>
             </div>
          <br>
-            <div class="form-group">
-               <label for="nickname" class="control-label joinformlist">닉네임 :</label>
-               <input style="width:280px" type="text" class="form-control" name="nickname" id="nickname" placeholder="Nick-name">
-               <input type="button" class="btn btn-primary" value="중복확인" onclick="duplicationNickname();"/>
+         <div class="form-group" style="padding-right: 82px;">
+               <label for="password" class="control-label joinformlist">비밀번호 :</label>
+               <input style="width:280px" type="password" class="form-control loginformlist" name="password" id="password">
             </div>
          <br>
             <div style="padding-bottom: 0px;">

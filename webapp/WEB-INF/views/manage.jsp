@@ -13,14 +13,38 @@
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
+	<style>
+		/*    이의제기 - 승인 */
+		   .check_btn{
+		    background: white;
+		    border: none;
+		    width: 30px;
+		    height: 30px;
+		   }   
+		/*   [호버] 이의제기 - 승인*/
+		   .check_btn_img_swap img:last-child{display:none;}
+		   .check_btn_img_swap:hover img:first-child{display:none;}
+		   .check_btn_img_swap:hover img:last-child{display:inline-block;}
+		                
+		/*    이의제기 - 거부 */
+		   .no_check_btn{
+		    background: white;
+		    border: none;
+		    width: 30px;
+		    height: 30px;
+		   }   
+		/*   [호버] 이의제기 - 거부*/
+		   .no_check_btn_img_swap img:last-child{display:none;}
+		   .no_check_btn_img_swap:hover img:first-child{display:none;}
+		   .no_check_btn_img_swap:hover img:last-child{display:inline-block;}
+	</style>
 	
 </head>
-
 <body>
 	<jsp:include page="search_navbar.jsp"></jsp:include>
 	
 	<div class="container">
-		<h4>[ 배그 랭킹 1위 막창 사랑님의 방송^_^다 드루왕~~ ]</h4>
+		<h4>${roomName }</h4>
 		<!-- 아코디언 패널이 표시되는 경우는 true로, 숨겨지는 경우는 false로 표시합니다.
 			 예: <button aria-expanded=”true”> (아코디언 패널이 확장된 경우) -->
 		<ul id="myTab" class="nav nav-tabs" role="tablist">

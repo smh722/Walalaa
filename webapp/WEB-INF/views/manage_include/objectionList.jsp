@@ -17,185 +17,234 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
     <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
     <script src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script>
-           <style>
-               body{
-                   padding: 0px;
-                   margin: 0px;
-               }
-                              
-               .tr_bottomline{
-                  border-bottom: 1px solid;
-                   border-bottom-color: lightgray;
-                   margin-bottom: 40px;
-               }        
-                      
-               .no_border_table{
-                  border: none;
-                  margin: 5px;
-                  width: 99%;
-                   font-size: 15px;
-                   text-align: center;
-                   border-collapse:collapse;
-                   border-bottom:  1px solid lightgray;
-               }
-               table th{
-                   text-align: center;
-                   margin-bottom: 5px;
-               }
-               
-               tr.ob_list td{
-                   text-align: center;
-                   font-size: 13px;
-               }
+        <style>
+            body{
+                padding: 0px;
+                margin: 0px;
+                font-size: 17px;
+            }
                            
-            .btn_color{
-               background-color: white;
-                 color: #4682B4;
-                 margin: 5px;            
+            .tr_bottomline{
+               border-bottom: 1px solid;
+                border-bottom-color: lightgray;
+                margin-bottom: 40px;
+            }        
+                   
+            .no_border_table{
+               border: none;
+               margin: 5px;
+               width: 99%;
+                font-size: 17px;
+                text-align: center;
+                border-collapse:collapse;
+                border-bottom:  1px solid lightgray;
             }
-            .btn_color:hover {
-               background-color: #f2f2f2;
-               color: #4682B4;  
+            table th{
+                text-align: center;
+                margin-bottom: 5px;
             }
             
-            .padding_td {
-               padding-left: 20px;
+            tr.ob_list td{
+                text-align: center;
+                font-size: 15px;
             }
-            
+                        
+         .btn_color{
+            background-color: white;
+              color: #4682B4;
+              margin: 5px;            
+         }
+         .btn_color:hover {
+            background-color: #f2f2f2;
+            color: #4682B4;  
+         }
+         
+         .padding_td {
+            padding-left: 20px;
+         }  
        </style>
 
+   <script type="text/javascript">
+   	var timerPaused = false;
+      var str = "";
+      
+      $(document).ready(function() {
+         var num =  $("#roomNum").val();
+         alert(num);
+         
+         var timer = window.setInterval( function () {
+        	 if(!timerPaused){
+	            $.ajax({
+	               url: "getObjList.do",
+	               type: "post",
+	               data : num,
+	               contentType : "application/json",
+	               dataType: "json",
+	               success: function(ObjList){   
+	                  str = "";
+	                  start();
+	                  for(var i = 0; i<ObjList.length; i++){
+	                     showObjList(ObjList[i]);
+	                  }
+	                  end();
+	                  $("#objshow").empty();
+	                  $("#objshow").append(str);
+	                  
+	                  
+	               },
+	                  error : function(XHR, status, error) {
+	                      console.error(status + " : " + error);
+	                  }                   
+	            });
+        	 }
+         }, 2000);   //5초에 한번
+         
+         function start() {
+            str += "<table class=\"no_border_table\">";
+            str += "    <tr class=\"tr_bottomline\">";
+            str += "        <th class='col-xs-1'>닉네임</th>";
+            str += "        <th class='col-xs-5'>내용</th>";
+            str += "        <th class='col-xs-1'>경고 </th>";
+            str += "        <th class='col-xs-1'>승인여부</th>";
+            str += "        <th class='col-xs-1'>상태</th>";
+            str += "        <th class='col-xs-2'>시간</th>";
+            str += "    </tr>";
+         }
+         
+         function showObjList(ObjectionVO) {
+            str += "<tr class=\"ob_list\">";
+            str += "    <td class=\"dropdown padding_td\">";
+            str += "        <button class=\"btn dropdown-toggle btn_color btn-group pause\" type=\"button\" onclick='pause()' data-toggle=\"dropdown\">";
+            str += "            "+ ObjectionVO.usersNickname;
+            str += "            <span class=\"caret\"></span></button>";
+            str += "            <ul class=\"dropdown-menu\">";
+            str += "                <li><a href=\"#\" onclick='play()'>채팅금지</a></li>";
+            str += "                <li><a href=\"#\" onclick='play()'>추방하기</a></li>";
+            str += "                <li><a href=\"#\" onclick='play()'>신고하기</a></li>";
+            str += "                <li><a href=\"#\" onclick='play()'>블랙리스트 등록</a></li>";
+            str += "            </ul>";
+            str += "    </td>";
+            str += "    <td>" + ObjectionVO.content + "</td>";
+            str += "    <td>" + ObjectionVO.chatmemWarningCount + "</td>";
+            str += "    <td> ";
+            if(ObjectionVO.approv_state == 0){
+               str += "        <button id='acceptBtn' class='check_btn check_btn_img_swap' data-number='" + ObjectionVO.objnum + "' >";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/check.png\">";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/check_hover2.png\">";
+               str += "        </button>";
+               str += "        <button id='rejectBtn' class='no_check_btn no_check_btn_img_swap'  data-number='" + ObjectionVO.objnum + "' >";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/no_check.png\">";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/no_check_hover2.png\">";
+               str += "        </button>";
+            } else if(ObjectionVO.approv_state == 1) {
+               str += "        <button class='check_btn ' >";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/check_hover2.png\">";
+               str += "        </button>";
+            } else if(ObjectionVO.approv_state == 2) {
+               str += "        <button class='no_check_btn ' >";
+               str += "            <img src=\"${pageContext.request.contextPath}/assets/images/no_check_hover2.png\">";
+               str += "        </button>";
+            }
+            str += "    </td>";
+            str += "    <td> " + ObjectionVO.chatmemChatstatus + "</td>";
+            str += "    <td> " + ObjectionVO.time +" </td>";
+            str += "</tr>";
+         }
+         
+         function end() {
+            str += "</table>";
+         }
+      
+      });
+  
+   
+   </script>
 
     </head>
-    <div>
-        <table class="no_border_table">
-            <tr class="tr_bottomline">
-                <th class='col-xs-1'>닉네임</th>
-                <th class='col-xs-5'>내용</th>
-                <th class='col-xs-1'>경고 </th>
-                <th class='col-xs-1'>승인여부</th>
-                <th class='col-xs-1'>상태</th>
-                <th class='col-xs-2'>시간</th>
-            </tr>
-            <!-- list 수만큼 반복-->
-            
-            <tr class="ob_list">
-               <td class="dropdown padding_td">
-                	<button class="btn dropdown-toggle btn_color btn-group" type="button" data-toggle="dropdown">
-                 	 	사용자12 
-                    	<span class="caret"></span></button>
-                     	<ul class="dropdown-menu">
-	                     	<li><a href="#">채팅금지</a></li>
-	                        <li><a href="#">추방하기</a></li>
-	                        <li><a href="#">신고하기</a></li>
-	                        <li><a href="#">블랙리스트</a></li>
-	                        <li><a href="#">운영자 추가</a></li>
-                     	</ul>
-                </td>
-                <td>아 씹 개 거지같은 ㅡㅡ 미친새끼 채금 왜검 ㅡㅡ</td>
-                <td>2</td>
-                <td>                
-               <button><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-               <button><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </td>
-                <td>채팅금지</td>
-                <td>2019/01/15 16:30:29</td>    
-            </tr>
-            <tr class="ob_list">
-               <td class="dropdown padding_td">
-                	<button class="btn dropdown-toggle btn_color btn-group" type="button" data-toggle="dropdown">
-                 	 	사용자12 
-                    	<span class="caret"></span></button>
-                     	<ul class="dropdown-menu">
-	                     	<li><a href="#">채팅금지</a></li>
-	                        <li><a href="#">추방하기</a></li>
-	                        <li><a href="#">신고하기</a></li>
-	                        <li><a href="#">블랙리스트</a></li>
-	                        <li><a href="#">운영자 추가</a></li>
-                     	</ul>
-                </td>
-                <td>아 씹 개 거지같은 ㅡㅡ 미친새끼 채금 왜검 ㅡㅡ</td>
-                <td>2</td>
-                <td>                
-               <button><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-               <button><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </td>
-                <td>채팅금지</td>
-                <td>2019/01/15 16:30:29</td>    
-            </tr>
-            <tr class="ob_list">
-               <td class="dropdown padding_td">
-                	<button class="btn dropdown-toggle btn_color btn-group" type="button" data-toggle="dropdown">
-                 	 	사용자12 
-                    	<span class="caret"></span></button>
-                     	<ul class="dropdown-menu">
-	                     	<li><a href="#">채팅금지</a></li>
-	                        <li><a href="#">추방하기</a></li>
-	                        <li><a href="#">신고하기</a></li>
-	                        <li><a href="#">블랙리스트</a></li>
-	                        <li><a href="#">운영자 추가</a></li>
-                     	</ul>
-                </td>
-                <td>아 씹 개 거지같은 ㅡㅡ 미친새끼 채금 왜검 ㅡㅡ</td>
-                <td>2</td>
-                <td>
-               <button><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-               <button><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </td>
-                <td>채팅금지</td>
-                <td>2019/01/15 16:30:29</td>    
-            </tr>
-            
-            <tr class="ob_list">
-                <td class="dropdown padding_td">
-                	<button class="btn dropdown-toggle btn_color btn-group" type="button" data-toggle="dropdown">
-                 	 	사용자12 
-                    	<span class="caret"></span></button>
-                     	<ul class="dropdown-menu">
-	                     	<li><a href="#">채팅금지</a></li>
-	                        <li><a href="#">추방하기</a></li>
-	                        <li><a href="#">신고하기</a></li>
-	                        <li><a href="#">블랙리스트</a></li>
-	                        <li><a href="#">운영자 추가</a></li>
-                     	</ul>
-                </td>
-                <td>아 씹 개 거지같은 ㅡㅡ 미친새끼 채금 왜검 ㅡㅡ</td>
-                <td>2</td>
-                <td>
-               <button><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-               <button><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                </td>
-                <td>채팅금지</td>
-                <td>2019/01/15 16:30:29</td>    
-            </tr>
-            <!--반복-->
-        </table>
-    </div>   
+    <body>
+       <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" />
     
+       <!-- 등록된 이의신청 보여주는 테이블 -->
+       <div id="objshow"></div>   
     
     <script>
     
-    $(function() {
-		timer = setInterval( function () {
-			var id = "";
-			id = $("#userId").val();
-					$.ajax({
-			            type : "post",
-			            url : "getObjList.do",
-				        async: true,
-			            data : id,
-			            success : function(warnCnt){
-			               
-			            $("#warnCnt").val("경고" + warnCnt + "회");
-			               
-			            },
-			            error : function(XHR, status, error) {
-			               console.error(status + " : " + error);
-			            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-			      
-			         });
-		}, 30000); // 1초에 한번씩 받아온다.
-	});
+        //승인버튼 클릭했을때
+       $("#objshow").on("click", ".check_btn", function(){
+          //승인 버튼을 변수에 넣음
+          var $acceptBtn = $(this);
+          //button 의 숨겨진 data 값 변수에 넣기
+          var num = $acceptBtn.data("number");
+          //새로고침 후 버튼클릭 시 오류 방지를 위함
+          if(num != null){
+             //accept 아작스 함수 처리
+             accept(num);
+             // 같은 형제위치의 버튼 변수넣기
+             var $rejectBtn = $(this).siblings();
+             // 버튼지우기
+             $rejectBtn.remove();
+          }
+       });
+        //거절버튼 클릭했을때
+       $("#objshow").on("click", ".no_check_btn", function(){
+          //거절 버튼을 변수에 넣음
+          var $rejectBtn = $(this);
+          //button 의 숨겨진 data 값 변수에 넣기
+          var num = $rejectBtn.data("number");
+          //새로고침 후  버튼클릭 시 오류 방지를 위함
+          if(num != null){
+             //reject 아작스 함수 처리
+             reject(num);
+             // 같은 형제위치의 버튼 변수넣기
+             var $acceptBtn = $(this).siblings();
+             // 버튼지우기as
+             $acceptBtn.remove();
+          }
+       });
+        
     
+       function accept(num){
+          var objnum = num;
+            $.ajax({
+               type : "post",
+               data : {objnum: objnum},
+               url : "${pageContext.request.contextPath}/objAccept.do",
+               success : function(){
+               alert("승인되었습니다");
+               },
+               error : function(XHR, status, error) {
+                  console.error(status + " : " + error);
+               }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+      
+          });
+      }
+       function reject(num){
+          var objnum = num;
+            $.ajax({
+               type : "post",
+               url : "${pageContext.request.contextPath}/objReject.do",
+               data : {objnum: objnum},
+               success : function(){
+                  alert("반려되었습니다.");
+               },
+               error : function(XHR, status, error) {
+                  console.error(status + " : " + error);
+               }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+         
+         });
+      }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                  
     </script>
+	<script>
+	   	function pause(){
+	   		timerPaused = true;
+	   	}
+	   	function play(){
+	   		timerPaused = false;
+	   	}
+	</script>
+    </body>
+    
+
 
 </html>

@@ -5,6 +5,19 @@ public class UserVO {
 	private String email;
 	private String password;
 	private String nickname;
+	private int manage_warncount;
+	private int apply;
+	private String blacklist;
+	private String operlist;
+	private String subscribe;
+	
+	public int getApply() {
+		return apply;
+	}
+
+	public void setApply(int apply) {
+		this.apply = apply;
+	}
 
 	public String getEmail() {
 		return email;
@@ -28,6 +41,38 @@ public class UserVO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public int getManage_warncount() {
+		return manage_warncount;
+	}
+
+	public void setManage_warncount(int manage_warncount) {
+		this.manage_warncount = manage_warncount;
+	}
+
+	public String getBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(String blacklist) {
+		this.blacklist = blacklist;
+	}
+
+	public String getOperlist() {
+		return operlist;
+	}
+
+	public void setOperlist(String operlist) {
+		this.operlist = operlist;
+	}
+
+	public String getSubscribe() {
+		return subscribe;
+	}
+
+	public void setSubscribe(String subscribe) {
+		this.subscribe = subscribe;
 	}
 
 	@Override

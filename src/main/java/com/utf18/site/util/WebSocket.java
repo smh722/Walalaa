@@ -1,6 +1,5 @@
 package com.utf18.site.util;
 
-import java.io.Console;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,9 +21,11 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.utf18.site.service.ChatService;
+import com.utf18.site.service.UserService;
 import com.utf18.site.vo.ChatLogVO;
 import com.utf18.site.vo.ChatMemberVO;
 import com.utf18.site.vo.ChatVO;
+import com.utf18.site.vo.CustomBadwordVO;
 import com.utf18.site.vo.UserVO;
 
 public class WebSocket extends TextWebSocketHandler {
@@ -32,7 +33,8 @@ public class WebSocket extends TextWebSocketHandler {
 
 	@Autowired
 	ChatService chatService;
-
+	@Autowired
+	UserService userService;
 	private static final Logger logger = LoggerFactory.getLogger(WebSocket.class);
 
 	// 서버에 연결된 사용자들을 저장하기위해 선언
@@ -40,6 +42,7 @@ public class WebSocket extends TextWebSocketHandler {
 	private Map<WebSocketSession, String> mapList = new HashMap<>(); // 실제session의 아이디정보, web소켓정보
 	private Map<WebSocketSession, String> roomList = new HashMap<>(); // 실제 session의 아이디정보, room정보
 	private Map<WebSocketSession, ArrayList<String>> badwordList = new HashMap<>(); // 실제 session의 아이디정보, room의 금지어 목록
+	private Map<WebSocketSession, ArrayList<String>> ilmeList = new HashMap<>(); // 일베,메갈,워마드,성인 단어
 	private Map<Integer, ArrayList<String>> chatLog = new HashMap<>(); // 방번호 , 채팅정보
 	private List<String> userList = new ArrayList<>(); // 접속자 명단을 개개인별로 뿌려주기위해 선언한 일반리스트
 
@@ -67,9 +70,11 @@ public class WebSocket extends TextWebSocketHandler {
 		String filterword = chatService.getFilterword(userRoom.getRoom());
 		if (filterword != null) {
 			ChatUtil chatUtil = new ChatUtil();
+			ArrayList<String> badfilter = new ArrayList<>();
 			ArrayList<String> totalfilter = new ArrayList<>();
 			if (filterword.contains("badword")) {
-				totalfilter.addAll(chatUtil.FilterwordSave("Badwords.csv"));
+				badfilter.addAll(chatUtil.FilterwordSave("Badwords.csv"));
+				badfilter.addAll(chatUtil.FilterwordSave("BadStandard.csv"));
 			}
 
 			if (filterword.contains("ilbe_megal")) {
@@ -82,7 +87,8 @@ public class WebSocket extends TextWebSocketHandler {
 				totalfilter.addAll(chatUtil.FilterwordSave("adult.csv"));
 			}
 			// 해당 session의 금지어 리스트을 등록
-			badwordList.put(session, totalfilter);
+			badwordList.put(session, badfilter);
+			ilmeList.put(session, totalfilter);
 		}
 		System.out.println(userId + "님이 " + userRoom.getRoom() + " 방에 들어왔습니다.");
 		logger.info("방세션등록");
@@ -110,17 +116,7 @@ public class WebSocket extends TextWebSocketHandler {
 				sessionList.get(i).sendMessage(new TextMessage(JsonDataOpen(nickname)));
 			}
 
-			// 11. 같은 방에 있는사람에게만 접속자 리스트를 날려주도록한다.
-			userList = informUser(mapList, roomName); // 현재 while문에서 사용중인 roomName값으로 리스트를 가져온다(아래method확인)
-			System.out.println("현재방에 참석중인사람수:" + userList.size());
-			ChatUtil chatUtil = new ChatUtil(); // util소속 클래스 선언
-			String userListMessage = chatUtil.split(userList); // 받아온 list에 대해서 문자열로 바인딩해서 날려줌
-			sessionList.get(i).sendMessage(new TextMessage(JsonUser(userListMessage)));
-
-			// 12. 방리스트를 모든 사람들에게 보내줌
-			String roomNames = getRoomName();
-			sessionList.get(i).sendMessage(new TextMessage(JsonRoom(roomNames)));
-
+		
 		}
 
 		// 13. 없는방에대해서 삭제처리를 한다.
@@ -135,39 +131,32 @@ public class WebSocket extends TextWebSocketHandler {
 		Map<String, Object> map = session.getAttributes();
 		UserVO mem = (UserVO) map.get("login");
 		String userId = mem.getEmail();
+
 		// 2. 접속을끊을 때 해당 아이디로 DB에서 어느 방에 존재하는지 확인한다.
 		ChatMemberVO member = chatService.getRoomMember(new ChatMemberVO(0, userId, "", ""));
 
 		if (chatService.getChatOwner(userId) != null) {
 			ChatVO info = chatService.getRoomInfo(member.getRoom());
-			ArrayList<String> log = chatLog.get(info.getNum());
-			for (String tmp : log) {
-				String msgArr[] = new String[3];
-				msgArr = tmp.split("&/%!"); // &/%!로 문자를 잘라서 배열에저장
-				
-					
-				ChatLogVO vo = new ChatLogVO(msgArr[0], msgArr[1], info.getNum());
+			if (chatLog.get(info.getNum()) != null) {
+				ArrayList<String> log = chatLog.get(info.getNum());
+				for (String tmp : log) {
+					String msgArr[] = new String[3];
+					msgArr = tmp.split("&/%!"); // &/%!로 문자를 잘라서 배열에저장
+					ChatLogVO vo = new ChatLogVO(msgArr[0], msgArr[1], info.getNum());
 
-				chatService.addChatLog(vo);
+					chatService.addChatLog(vo);
+				}
+
 			}
+
 		}
 		chatService.updateChatCountDec(new ChatVO(0, member.getRoom(), "", 0, 0, ""));
 		chatService.deleteRoomMember(member);
-		chatService.deleteChat();
-		// 3. 해당유저의 roomList, mapList, sessionList를 제거한다( 미리 제거를 해야만 본인 제외한 모든사람들에게 본인의
-		// 정보를 날려줄수있기때문)
 		roomList.remove(session);
 		mapList.remove(session); // 세션:key, 유저아이디:value
 		sessionList.remove(session); // 실제 websocket 세션명
 		logger.info("세션삭제:" + session.getId() + ",아이디삭제:" + userId + ",채팅 남은사람수:" + sessionList.size());
 
-		// 4. 이전 방에서 인원수를 감소시킨다. (이전방정보로 지우기)
-//       if(member.getPriroom()!=null) {
-//          chatService.updateChatCountDec(new ChatVO(0, member.getPriroom(), "", 0, 0, ""));
-//       }
-
-		// 4. 본인 제외하고 본인이 있던방의 모든사람들에게 나갔음을 알림
-		// 이유 : 해당 아이디가 이전의 있던 방에만 데이터를 전달할경우, 해당아이디가 없었던 방의 데이터는 전달이 안되고 아무정보도 들어오지않기때문
 
 	}
 
@@ -179,9 +168,10 @@ public class WebSocket extends TextWebSocketHandler {
 		Map<String, Object> map = session.getAttributes();
 		UserVO mem = (UserVO) map.get("login");
 		String userId = mem.getEmail();
+		String userNick = mem.getNickname();
 		logger.info("서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답서버응답");
 		if (message.getPayload().contains("!%/")) {
-				
+
 			// 2. 문자열 형태 : 문자 !%/ 대상 !%/ 방이름
 			System.out.println(message.getPayload());
 
@@ -189,34 +179,98 @@ public class WebSocket extends TextWebSocketHandler {
 			String msgArr[] = new String[3];
 			msgArr = message.getPayload().split("!%/"); // %!로 문자를 잘라서 배열에저장
 			String time = chatService.getTime();
-	        logger.info("메시지 보낸 시간 : "  + time);
+			logger.info("메시지 보낸 시간 : " + time);
 			// 4. [0]: 유저가 보낸 메시지, [1]:귓속말 대상자, [2]:방의 이름
 			System.out.println("보낸메시지:" + msgArr[0] + ", 귓속말대상자:" + msgArr[1] + ", 방의이름:" + msgArr[2]);
 			boolean send = true;
 
 			// 알고리즘 여기부터 시작하시면 됩니다
 
+			/*
+			badword -> 비속어, 표준화된비속어 csv 검사
+			badword1 -> 표준화 (standardize0)
+			badword2 -> 글자사이 특수문자, 숫자, 영어, 자음 제거(standardize12)(ex. 개@새끼)
+			badword3 -> 종성 제외시 욕인지 검사(standardize3)(ex. 씻발)
+			badword4 -> 나머지-(중성 앞에 77-> ㄲ (ex.개새77ㅣ),
+			r->ㅏ(ex.씨ㅂr) ,
+			1 i I l -> ㅣ(ex.ㅆ1발) ,
+			h H -> ㅐ(ex.ㄱhㅅH끼) ,
+			따로쳤을때(ex.ㄱㅐㅅㅐㄲㅣ)
+
+			비속어, 표준화된 비속어 csv는 순서대로 모두 검사
+			일베,메갈,워마드,성인 csv는 badword2와 badword4만 사용(대부분 단어 그대로 치기 때문에 표준화할 필요x)
+			*/
+			
+			
 			for (String badword : badwordList.get(session)) {
 				if (msgArr[0].contains(badword)) {
 					logger.info("비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   ");
-					session.sendMessage(new TextMessage(JsonDataBad(userId, msgArr[0])));
+					session.sendMessage(new TextMessage(JsonDataBad(userNick, msgArr[0])));
 					send = false;
-					chatService.plusWarningCount(userId);		// 비속어 사용 시, 경고 횟수 증가
+					chatService.plusWarningCount(userId); // 비속어 사용 시, 경고 횟수 증가
 					msgArr[0] += "&/%! B%A%D";
 					break;
 				}
 			}
+			if(send) {
+				String badword1 = ChatUtil.standardize0(msgArr[0]);
+				String badword2 = ChatUtil.standardize12(msgArr[0]);
+				//String badword3 = ChatUtil.standardize3(msgArr[0]);
+				String badword4 = ChatUtil.standardize6910(msgArr[0]);
+				
+				
+		         for (String badword : badwordList.get(session)) {
+					if (badword1.contains(badword)||badword2.contains(badword)||badword4.contains(badword)) {
+						logger.info("비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   ");
+						session.sendMessage(new TextMessage(JsonDataBad(userNick, msgArr[0])));
+						send = false;
+						chatService.plusWarningCount(userId); // 비속어 사용 시, 경고 횟수 증가
+						msgArr[0] += "&/%! B%A%D";
+						break;
+					}
+				}
+		         if(send) {
+			         for (String badword : ilmeList.get(session)) {
+			        	 if(badword2.contains(badword)) {
+			        		 logger.info("비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   비속어감지   ");
+								session.sendMessage(new TextMessage(JsonDataBad(userNick, msgArr[0])));
+								send = false;
+								chatService.plusWarningCount(userId); // 비속어 사용 시, 경고 횟수 증가
+								msgArr[0] += "&/%! B%A%D";
+								break;
+			        	 }
+			         }
+		         }
+			}
+			
+			
+
+			// 사용자 설정 비속어 확인
+			String owner = chatService.getRoomOwner(msgArr[2]);
+			String apply = userService.getApply(owner);
+			if (apply.equals("1")) {
+				for (CustomBadwordVO vo : userService.getWordList(owner)) {
+					if (msgArr[0].contains(vo.getContent())) {
+						session.sendMessage(new TextMessage(JsonDataUserBad(userNick, msgArr[0])));
+						send = false;
+						chatService.plusWarningCount(userId); // 비속어 사용 시, 경고 횟수 증가
+						msgArr[0] += "&/%! B%A%D";
+						break;
+					}
+				}
+			}
+
 			if (send) {
 				for (WebSocketSession webSocketSession : sessionList) {
 					// 같은방일때만 보냄
 					if (msgArr[2].equals(roomList.get(webSocketSession))) {
-						webSocketSession.sendMessage(new TextMessage(JsonData(userId, msgArr[0])));
+						webSocketSession.sendMessage(new TextMessage(JsonData(userNick, msgArr[0])));
 					}
 				}
 			}
 
 			ChatVO roomNum = chatService.getRoomInfo(msgArr[2]);
-//			채팅 내역을 chatlog list 에 저장하는 과정
+//         채팅 내역을 chatlog list 에 저장하는 과정
 			if (chatLog.get(roomNum.getNum()) == null) {
 				// 없으면 해당 방 넘버에 list생성
 				chatLog.put(roomNum.getNum(), new ArrayList<String>());
@@ -243,33 +297,45 @@ public class WebSocket extends TextWebSocketHandler {
 			} else {
 				// 방넘버에 쳇로그리스트가 있어, 해당 리스트를 가져온다
 				ArrayList<String> list = chatLog.get(roomNum.getNum());
-			String objlist = "";
-			for(String log : list) {
-				if(log.contains(userId))
-				if(log.contains("B%A%D")){
-	//						log.replace("B%A%D", "");
-	//						log.replace("&/%!", "");
-					objlist+=log;
-					logger.info("log : " + log);
-					logger.info("objlist : " + objlist);
-					logger.info("jsonObjData : " + JsonObjData(objlist));
+				String objlist = "";
+				for (String log : list) {
+					if (log.contains(userId))
+						if (log.contains("B%A%D")) {
+							objlist += log;
+//               logger.info("log : " + log);
+//               logger.info("objlist : " + objlist);
+//               logger.info("jsonObjData : " + JsonObjData(objlist));
+						}
 				}
 				session.sendMessage(new TextMessage(JsonObjData(objlist)));
 			}
-			}
 		}
 	}
-	
+
 	// json형태로 메세지 변환2(이의제기했을때)
 	public String JsonObjData(String msg) {
 		JsonObject jsonObject = Json.createObjectBuilder().add("message", msg).build();
 		StringWriter write = new StringWriter();
-		
+
 		try (JsonWriter jsonWriter = Json.createWriter(write)) {
 			jsonWriter.write(jsonObject);
-		};
+		}
+		;
 		return write.toString();
 	}
+
+	// json형태로 메세지 변환2(이의제기했을때)
+	public String JsonDataEnd() {
+		JsonObject jsonObject = Json.createObjectBuilder().add("message", "broadcast&end").build();
+		StringWriter write = new StringWriter();
+
+		try (JsonWriter jsonWriter = Json.createWriter(write)) {
+			jsonWriter.write(jsonObject);
+		}
+		;
+		return write.toString();
+	}
+
 	// json형태로 메세지 변환2( 채팅 쳤을때)
 	public String JsonData(String id, Object msg) {
 		JsonObject jsonObject = Json.createObjectBuilder().add("message", "<b>[" + id + "]</b> : " + msg).build();
@@ -277,14 +343,15 @@ public class WebSocket extends TextWebSocketHandler {
 
 		try (JsonWriter jsonWriter = Json.createWriter(write)) {
 			jsonWriter.write(jsonObject);
-		};
+		}
+		;
 		return write.toString();
 	}
 
 	// json형태로 메세지 변환2( 접속했음을 알릴때)
 	public String JsonDataOpen(String id) {
 		JsonObject jsonObject = Json.createObjectBuilder()
-				.add("message", "<b>[" + id + "]</b> 님이 <b style='color:blue'>접속</b>하셨습니다.</a>").build();
+				.add("message", "<b style='color:blue'>[" + id + "] 님이 접속하셨습니다.</b>").build();
 		StringWriter write = new StringWriter();
 
 		try (JsonWriter jsonWriter = Json.createWriter(write)) {
@@ -320,6 +387,19 @@ public class WebSocket extends TextWebSocketHandler {
 		return write.toString();
 	}
 
+	// 사용자 금지어
+	public String JsonDataUserBad(String id, Object msg) {
+		JsonObject jsonObject = Json.createObjectBuilder().add("message", "#^$userbad" + "<b>[" + id + "]</b> : " + msg)
+				.build();
+		StringWriter write = new StringWriter();
+
+		try (JsonWriter jsonWriter = Json.createWriter(write)) {
+			jsonWriter.write(jsonObject);
+		}
+
+		return write.toString();
+	}
+
 	// json형태로 유저 정보 날리기
 	public String JsonUser(String id) {
 		JsonObject jsonObject = Json.createObjectBuilder().add("list", id).build();
@@ -332,98 +412,6 @@ public class WebSocket extends TextWebSocketHandler {
 		return write.toString();
 	}
 
-	// json형태로 방 정보 날리기
-	public String JsonRoom(String roomNames) {
-		JsonObject jsonObject = Json.createObjectBuilder().add("room", roomNames).build();
-		StringWriter write = new StringWriter();
 
-		try (JsonWriter jsonWriter = Json.createWriter(write)) {
-			jsonWriter.write(jsonObject);
-
-		}
-
-		return write.toString();
-	}
-
-	// 유저리스트
-	private List<String> informUser(Map<WebSocketSession, String> maplist, String room) throws Exception {
-		// 맵을 이용해서 세션을 통해 아이디값을 value로 가져와서 list에 담기
-
-		// 1.담을 리스트 껍데기 선언
-		List<String> list = new ArrayList<>();
-
-		// 2. 존재하는 웹소켓아이디, 로그인아이디 만큼 while문을 돌려준다.
-		Iterator<WebSocketSession> sessionIds = maplist.keySet().iterator();
-		while (sessionIds.hasNext()) {
-			WebSocketSession sessionId = sessionIds.next();
-			String value = maplist.get(sessionId); // 실제 아이디값
-
-			// 3. 해당 번지의 key값에 해당하는 방의 이름정보를 가져옴
-			String userRoom = roomList.get(sessionId);
-
-			// 4. 지금 돌고있는 while문에서 추출한 방이름과 들어온 방의이름이 같을경우 리스트에 저장하도록한다.
-			if (userRoom.equals(room)) {
-				System.out.println("아이디:" + value + ", 방이름:" + userRoom);
-				list.add(value);
-			}
-		}
-		return list;
-	}
-
-	// DB로부터 존재하는 방정보 String 형태로 가져오기
-	public String getRoomName() throws Exception {
-
-		List<ChatVO> roomList = chatService.getRoomList();
-
-		String room = sessionList.size() + "";
-
-		for (int i = 0; i < roomList.size(); i++) {
-			room += ",";
-			room += roomList.get(i).getName() + "/";
-			room += roomList.get(i).getRemaincount() + "/";
-			room += roomList.get(i).getTotalcount() + "/";
-			room += roomList.get(i).getContent() + "/";
-			room += roomList.get(i).getFilterword();
-		}
-
-		// room= room.substring(0, room.length()-1); //뒤의 문자열 자르기
-
-		// logger.info(room);
-
-		return room;
-
-	}
-
-	public String getRoomName(String name) throws Exception {
-
-		List<ChatVO> roomList = chatService.searchRoomList(name);
-
-		String room = sessionList.size() + "";
-
-		// 검색했는데 방이 없을 경우
-		if (roomList.size() < 1) {
-			room += ",방이 존재하지 않습니다./ / / /null";
-
-		}
-
-		// 방이 존재할경우
-		else {
-
-			for (int i = 0; i < roomList.size(); i++) {
-				room += ",";
-				room += roomList.get(i).getName() + "/";
-				room += roomList.get(i).getRemaincount() + "/";
-				room += roomList.get(i).getTotalcount() + "/";
-				room += roomList.get(i).getContent() + "/";
-				room += roomList.get(i).getFilterword();
-			}
-		}
-		// room= room.substring(0, room.length()-1); //뒤의 문자열 자르기
-
-		logger.info(room);
-
-		return room;
-
-	}
 
 }

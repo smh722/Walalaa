@@ -1,181 +1,279 @@
+<%@page import="com.utf18.site.vo.UserVO"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<style>
-		body {
-		   padding: 0px;
-		   margin: 0px;
-		}
-		
-		table.user_table {
-		   border-collapse: collapse;
-		   margin: 5px;
-		   border-bottom: solid 1px;
-		   border-bottom-color: lightgray;
-		   width: 99%;
-		   font-size: 15px;
-		   text-align: center;
-		}
-		
-		table thead.menubar {
-		   border-bottom: solid 1px;
-		   border-bottom-color: lightgray;
-		}
-		
-		table th {
-		   text-align: center;
-		   margin-bottom: 5px;
-		}
-		
-		tr.user_list td {
-		   text-align: center;
-		   font-size: 15px;
-		   font-weight: 600;
-		}
-		
-		.manage_area {
-		   font-size: 15px;
-		   font-weight: 600;
-		   text-align: center;
-		}
-		
-		a {
-		   text-decoration: none;
-		   color: rgb(24, 21, 21);
-		}
-
-		.btn_color{
-           background-color: white;
-           color: #4682B4;
-           margin: 5px;            
-        }
-        .btn_color:hover {
-           background-color: #f2f2f2;
-           color: #4682B4;  
-        }
-	</style>
+   <style>
+      .backgr{
+         display: flex;
+      }
+      .header {
+         width: 100%;
+         height: 30px;
+         align-content: center;
+         margin-top: 20px;
+         border-bottom: 1px solid lightgray;
+      }
+      .divsize {
+         width: 380px;
+         height: 300px;
+      }
+      
+      .labeltxt {
+         width: 313px;
+         text-align: center;
+      }
+      
+      .content {
+         margin-top: 10px;
+         text-align: center;
+      }
+      
+      .dropdown-menu {
+          position:absolute;
+          background-color: white;
+          right: auto;
+          width : 100px;
+          transform: translate(50%);
+      }
+      
+      .dropposition {
+         position: relative;
+      }
+      
+      .btnDelete {
+        background:
+           url(${pageContext.request.contextPath}/assets/images/delete03.png) center
+           no-repeat #fff;
+        width: 30px; height : 33px;
+        border: none;
+      }
+      /* [호버] 삭제 버튼 */
+      .btnDelete:hover {
+         background:
+            url(${pageContext.request.contextPath}/assets/images/delete03_hover.png)
+            center no-repeat #fff;
+         width: 30px; height : 33px;
+         border: none;
+      }
+         
+   </style>
+   
+   <script type="text/javascript">
+      var str_ppl = "";   // 현재 접속 중인 시청자 그리기용
+      var str_bl = "";   // 방송자의 블랙리스트 그리기 용
+      var str_op = "";   // 방송자의 운영자 그리기용
+      var id = '${login.email}';
+      var ajaxpaused = false;
+      
+      $(document).ready(function() {
+         var num = $("#roomNum").val();
+         timer = setInterval( function () {
+         if(!ajaxpaused){
+            $.ajax({
+               url: "${pageContext.request.contextPath}/getCnntPPL.do",
+               type: "post",
+               data: {num: num},
+               success: function(userVOs){   
+                  str_ppl = "";
+                  for(var i=0; i < userVOs.length; i++) {
+                     showPPL(userVOs[i]);
+                  }
+                  $("#showCnntPPL").empty();
+                  $("#showCnntPPL").append(str_ppl);
+               },
+                  error : function(XHR, status, error) {
+                      console.error(status + " : " + error);
+                  }  
+            });
+            
+            $.ajax({
+               url: "${pageContext.request.contextPath}/getBlackListUser.do",
+               type: "post",
+               data: {id : id},
+               success: function(info){
+                  str_bl = "";
+                  
+                  for(var i=0; i<info.length; i++){
+                     showBlacklist(info[i]);
+                  }
+                  $("#showBlacklist").empty();
+                  $("#showBlacklist").append(str_bl);
+               }, error : function(XHR, status, error) {
+                      console.error(status + " : " + error);
+               }  
+            });
+            
+            $.ajax({
+                url: "${pageContext.request.contextPath}/getOperListUser.do",
+                type: "post",
+                data: {id : id},
+                success: function(info){
+                   str_op = "";
+                   
+                   for(var i=0; i<info.length; i++){
+                      showOperList(info[i]);
+                   }
+                   $("#showOperList").empty();
+                   $("#showOperList").append(str_op);
+                }, error : function(XHR, status, error) {
+                       console.error(status + " : " + error);
+                }  
+             });
+         }
+         }, 3000);   //5초에 한번
+         function showPPL(userVOs) {
+           if(userVOs.email != id) {
+               str_ppl += " <div class='dropposition'>";
+               str_ppl += "   <button class='btn dropdown-toggle btn-group btn_color' onclick='pause()' type='button' data-toggle='dropdown' > ";
+               str_ppl +=       userVOs.nickname;
+               str_ppl += "      <span class='caret'> </span>";
+               str_ppl += "   </button>";
+               str_ppl += "   <ul class='dropdown-menu' id='dropvalue' >";
+               str_ppl += "      <li><a href='manage_user_chatting.do'>채팅 모아보기</a></li>";
+               str_ppl += "      <li class='divider'></li>";
+               str_ppl += "      <li><a href='#' data-value='black' data-email='"+userVOs.email+"' >블랙리스트 추가</a></li>";
+               str_ppl += "      <li><a href='#' data-value='oper' data-email='"+userVOs.email+"' >운영자 추가</a></li>";
+               str_ppl += "   </ul>";
+               str_ppl += "   <br>";
+               str_ppl += " </div>";
+           }
+         }
+         
+         function showBlacklist(UserVO) {
+               str_bl += "   <div style='display:flex;' >";
+               str_bl += "       <div style='width:270px; height:42px; padding-top:10px;' >";
+               str_bl += "   "       + UserVO.nickname;
+               str_bl += "       </div>";
+               str_bl += "       <div>";
+               str_bl += "          <button id='delBL' class='delBL btnDelete' data-email='"+ id +"' data-list='"+ UserVO.email +"' style='position=right;' >";
+               str_bl += "          </button>";
+               str_bl += "       </div>";
+               str_bl += " </div>";
+         }
+         
+         function showOperList(UserVO) {
+               str_op += "   <div style='display:flex;' >";
+               str_op += "       <div style='width:270px; height:42px; padding-top:10px;' >";
+               str_op += "   " + UserVO.nickname;
+               str_op += "       </div>";
+               str_op += "       <div>";
+               str_op += "          <button id='delOL' class='delOL btnDelete' data-email='"+ id +"' data-list='"+ UserVO.email +"'>";
+               str_op += "          </button>";
+               str_op += "       </div>";
+               str_op += " </div>";
+         }
+      });
+   </script>
 
 
 </head>
-<div>
-   <table class="user_table">
-      <thead class="menubar">
-         <tr>
-            <th class='col-xs-4'>현재 접속중</th>
-            <th class='col-xs-4'>블랙리스트</th>
-            <th class='col-xs-4'>운영자리스트</th>
-         </tr>
-      </thead>
-      <!-- socket.io 이용해서 div 안에 자동으로 채움-->
-      <tr class="user_list">
-        <td class="dropdown">
-            <button class="btn dropdown-toggle btn-group btn_color" type="button" data-toggle="dropdown">
-                시청자
-                <span class="caret"></span>
-            </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">블랙리스트 추가</a></li>
-                   <li><a href="#">운영자 추가</a></li>
-                   <li><a href="manage_user_chatting.do">채팅 모아보기</a></li>
-               </ul>
-        </td>
-        <td>
-            나쁜시청자
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-        <td>
-            권력자1
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-      </tr>
-      <tr class="user_list">
-        <td class="dropdown">
-            <button class="btn dropdown-toggle btn-group btn_color" type="button" data-toggle="dropdown">
-                시청자
-                <span class="caret"></span>
-            </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">블랙리스트 추가</a></li>
-                   <li><a href="#">운영자 추가</a></li>
-                   <li><a href="manage_user_chatting.do">채팅 모아보기</a></li>
-               </ul>
-        </td>
-        <td>
-            나쁜시청자
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-        <td>
-            권력자1
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-      </tr>
-      <tr class="user_list">
-        <td class="dropdown">
-            <button class="btn dropdown-toggle btn-group btn_color" type="button" data-toggle="dropdown">
-                시청자
-                <span class="caret"></span>
-            </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">블랙리스트 추가</a></li>
-                   <li><a href="#">운영자 추가</a></li>
-                   <li><a href="manage_user_chatting.do">채팅 모아보기</a></li>
-               </ul>
-        </td>
-        <td>
-            나쁜시청자
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-        <td>
-            권력자1
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-      </tr>
-      <tr class="user_list">
-        <td class="dropdown">
-            <button class="btn dropdown-toggle btn-group btn_color" type="button" data-toggle="dropdown">
-                시청자
-                <span class="caret"></span>
-            </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">블랙리스트 추가</a></li>
-                   <li><a href="#">운영자 추가</a></li>
-                   <li><a href="manage_user_chatting.do">채팅 모아보기</a></li>
-               </ul>
-        </td>
-        <td>
-            나쁜시청자
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-        <td>
-            권력자1
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-      </tr>
-      <tr class="user_list">
-        <td class="dropdown">
-            <button class="btn dropdown-toggle btn-group btn_color" type="button" data-toggle="dropdown">
-                시청자
-                <span class="caret"></span>
-            </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">블랙리스트 추가</a></li>
-                   <li><a href="#">운영자 추가</a></li>
-                   <li><a href="manage_user_chatting.do">채팅 모아보기</a></li>
-               </ul>
-        </td>
-        <td>
-            나쁜시청자
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-        <td>
-            권력자1
-            <button><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-        </td>
-      </tr>
+<body>
+   <% UserVO login = (UserVO) session.getAttribute("login"); %>
+   <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" />
+   
+         
+   <div class="backgr">
+      <div class="divsize">
+         <div class="header">
+            <label class="labeltxt">현재 접속중</label>
+         </div>
+         <div class="content" id="showCnntPPL">
+         </div>
+      </div>   
 
-   </table>
-</div>
+      <div class="divsize" id="">
+         <div class="header">
+            <label class="labeltxt">블랙리스트</label>
+         </div>
+         <div class="content" id="showBlacklist">
+         </div>
+      </div>
+   
+      <div class="divsize">
+         <div class="header">
+            <label class="labeltxt">운영자리스트</label> 
+         </div>
+         <div class="content" id="showOperList">
+         </div>
+      </div>
+   </div>
+   
+   <script>
+      $("#showBlacklist").on("click", ".delBL", function(){
+          //승인 버튼을 변수에 넣음
+          var $DelBtn = $(this);
+          //button 의 숨겨진 data 값 변수에 넣기
+          var email = $DelBtn.data("email");
+          var list = $DelBtn.data("list");
+         deleteBList(email, list);
+       });
+      
+      $("#showOperList").on("click", ".delOL", function(){
+          //승인 버튼을 변수에 넣음
+          var $DelBtn = $(this);
+          //button 의 숨겨진 data 값 변수에 넣기
+          var email = $DelBtn.data("email");
+          var list = $DelBtn.data("list");
+          deleteOList(email, list);
+       });
+      
+      function deleteBList(email, delBList) {
+         $.ajax({
+            type: "post",
+            url : "${pageContext.request.contextPath}/delBlackList.do",
+               data : {email: email, delBList: delBList}, 
+               success : function(){
+               },
+               error : function(XHR, status, error) {
+                  console.error(status + " : " + error);
+               }   
+         });
+      }
+      function deleteOList(email, delOList) {
+         $.ajax({
+            type: "post",
+            url : "${pageContext.request.contextPath}/delOperList.do",
+               data : {email: email, delOList: delOList}, 
+               success : function(){
+               },
+               error : function(XHR, status, error) {
+                  console.error(status + " : " + error);
+               }   
+         });
+      }
+   </script>
+   <script>
+      function pause(){
+         ajaxpaused = true;
+      }
+      function start(){
+         ajaxpaused = false;
+      }
+   </script>
+   <script>
+   
+      $(document).on('click', '.dropdown-menu li a', function() {   
+         var $this = $(this);
+         var email = $this.data("email");
+         var value = $this.data("value");
+         var num = ${roomNum};
+         
+         start();
+         
+         $.ajax({
+            type: "post",
+            url: "${pageContext.request.contextPath}/listupdate.do",
+            data : {email:email, value:value, num : num},
+            success : function() {
+            }
+         });
+      });
+   
+   
+   </script>
+   
+</body>
 
 </html>

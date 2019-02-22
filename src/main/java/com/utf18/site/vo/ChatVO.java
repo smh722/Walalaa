@@ -23,43 +23,18 @@ public class ChatVO implements Serializable {
 
 	private int num; // 방번호
 	private String name; // 방이름
-	private String filterword; // 비밀번호
+	private String filterword; // 금지어 목록
 	private int totalcount; // 접속자제한수
 	private int remaincount; // 남은사람수
 	private String content; // 내용
 	private String owner; // 방 생성하는 사람
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-//DB 이미지 경로 추가
-	private String fileName;
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public MultipartFile getUploadFile() {
-		return uploadFile;
-	}
-
-	public void setUploadFile(MultipartFile uploadFile) {
-		this.uploadFile = uploadFile;
-	}
-
-	private MultipartFile uploadFile;
-
-	public ChatVO() {
-	}
+	private String thumbnail; // 섬네일 저장위치 url
+	private int views;  //조회수
+	private String uploadtime; // 방송 시작시간
+	private String usersNickname; // 유저 닉네임 조인전용
+	
+	
+	public ChatVO() {}
 
 	public ChatVO(int num, String name, String filterword, int totalcount, int remaincount, String content) {
 		this.num = num;
@@ -69,6 +44,23 @@ public class ChatVO implements Serializable {
 		this.remaincount = remaincount;
 		this.content = content;
 	}
+	
+	public String getUsersNickname() {
+		return usersNickname;
+	}
+
+	public void setUsersNickname(String usersNickname) {
+		this.usersNickname = usersNickname;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 
 	public int getNum() {
 		return num;
@@ -116,6 +108,30 @@ public class ChatVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+	
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
+	}
+	
+	public String getUploadtime() {
+		return uploadtime;
+	}
+
+	public void setUploadtime(String uploadtime) {
+		this.uploadtime = uploadtime;
 	}
 
 	@Override

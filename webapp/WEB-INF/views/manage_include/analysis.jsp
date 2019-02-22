@@ -14,6 +14,9 @@
 	#analysisTable>tbody>tr>td{
 		padding-bottom: 5px;
 	}
+	body{
+	font-size: 15px;
+	}
 </style>
 
 <script type="text/javascript">

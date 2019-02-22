@@ -2,6 +2,8 @@ package com.utf18.site.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpSession;
 
@@ -14,16 +16,25 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.utf18.site.service.ChatService;
 import com.utf18.site.service.UserService;
+import com.utf18.site.vo.ChatMemberVO;
+import com.utf18.site.vo.ChatVO;
+import com.utf18.site.vo.CustomBadwordVO;
 import com.utf18.site.vo.UserVO;
 
 @Controller
 public class UserController {
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ChatService chatService;
+
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping(value = "main.do", method = RequestMethod.GET)
@@ -79,7 +90,11 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "manage.do", method = RequestMethod.GET)
-	public String manage() {
+	public String manage(Model model, int roomNum) {
+		ChatVO vo = chatService.getRoomInfoNumber(roomNum);
+		String roomName = vo.getName();
+		model.addAttribute("roomNum", roomNum);
+		model.addAttribute("roomName", roomName);
 		return "manage";
 	}
 
@@ -106,6 +121,8 @@ public class UserController {
 	@RequestMapping(value = "broadcast_finish.do", method = RequestMethod.GET)
 	public String broadcast_finish(Model model, int roomNum) {
 		model.addAttribute("roomNum", roomNum);
+		ChatVO vo = chatService.getRoomInfoNumber(roomNum);
+		model.addAttribute("chat", vo);
 		return "broadcast_finish";
 	}
 
@@ -153,7 +170,7 @@ public class UserController {
 		model.addAttribute("password", vo.getPassword());
 		return "findpassword";
 	}
-	
+
 	@RequestMapping("logout.do")
 	public String logout(HttpSession session) {
 		UserVO vo = new UserVO();
@@ -161,4 +178,147 @@ public class UserController {
 		return "main";
 	}
 
+	// 비밀번호 일치하는지 확인
+	@RequestMapping(value = "checkPassword.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String checkPassword(@RequestBody String email) {
+
+		System.out.println("-------------checkPassword UserController-------------");
+		System.out.println("-------------(checkPassword.do)-------------");
+		System.out.println(email);
+
+		System.out.println("UserController email: " + email);
+
+		String getPassword = userService.checkPassword(email.replace("%40", "@"));
+
+		return getPassword;
+	}
+
+	// 사용자 '경고횟수' 설정
+	@RequestMapping(value = "setWarnCount.do", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public void setWarnCount(@RequestParam(name = "input", required = true) int manage_warncount, String email) {
+		System.out.println("-------컨트롤러-----setWarnCount.do : " + manage_warncount + "------------");
+
+		UserVO vo = new UserVO();
+
+		vo.setManage_warncount(manage_warncount);
+		vo.setEmail(email);
+
+		userService.setWarnCount(vo);
+	}
+
+	// 적용 0 => 유저가 작성한 비속어 리스트 채팅에 적용안함
+	@RequestMapping(value = "apply0.do", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public void apply0(String email) {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+
+		System.out.println("-------------apply0 UserController-------------");
+		System.out.println("-------------(apply0.do)-------------");
+		System.out.println(email);
+
+		userService.apply0(email);
+	}
+
+	// 적용 1 => 유저가 작성한 비속어 리스트 채팅에 적용 함
+	@RequestMapping(value = "apply1.do", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public void apply1(String email) {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+
+		System.out.println("-------------apply1 UserController-------------");
+		System.out.println("-------------(apply1.do)-------------");
+		System.out.println(email);
+
+		userService.apply1(email);
+	}
+
+	// 사용자 지정 비속어 단어 삭제
+	@RequestMapping(value = "deleteCustomBadword.do", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public void deleteCustomBadword(int num) {
+		System.out.println("-------컨트롤러-----deleteCustomBadword.do : " + num + "------------------");
+
+		CustomBadwordVO vo = new CustomBadwordVO();
+		vo.setNum(num);
+
+		userService.deleteCustomBadword(vo);
+	}
+
+	// 사용자가 추가한 비속어 단어리스트 가져오기
+	@ResponseBody
+	@RequestMapping(value = "getCustomBadwordList.do", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<CustomBadwordVO> getWordList(@RequestParam(name = "email", required = true) String email)
+			throws Exception {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+		List<CustomBadwordVO> badWordList = userService.getWordList(email);
+		return badWordList;
+	}
+
+	// 구독 기능
+	@ResponseBody
+	@RequestMapping(value = "subScribe.do", method = RequestMethod.POST )
+	public void subscribe(@RequestBody String email) throws Exception {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+		
+		ChatMemberVO mem = new ChatMemberVO();
+		mem.setId(email);
+		mem = chatService.getRoomMember(mem);
+		String subscribe = chatService.getRoomOwner(mem.getRoom());
+		
+		UserVO vo = new UserVO();
+		vo.setEmail(email);
+		vo = userService.getUserVO(vo);
+		String addList = vo.getSubscribe() + subscribe + "&/&";;
+		vo.setSubscribe(addList);
+		userService.subscribe(vo);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "delsubScribe.do", method = RequestMethod.POST )
+	public void delsubScribe(@RequestBody String email) throws Exception {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+		
+		//owner 가져오기
+		ChatMemberVO mem = new ChatMemberVO();
+		mem.setId(email);
+		mem = chatService.getRoomMember(mem);
+		String owner = chatService.getRoomOwner(mem.getRoom());
+		//user가져오기
+		UserVO vo = new UserVO();
+		vo.setEmail(email);
+		vo = userService.getUserVO(vo);
+		//subscribe 지우기
+		String subscribe = vo.getSubscribe();
+		subscribe = subscribe.replaceAll(owner+"&/&", "");
+		vo.setSubscribe(subscribe);
+		userService.subscribe(vo);
+		
+	}
+	
+	// 구독상태 체크
+	@ResponseBody
+	@RequestMapping(value = "/subScribecheck.do", method = RequestMethod.POST )
+	public boolean subScribecheck(@RequestBody String email) throws Exception {
+		email = email.replace("%40", "@");
+		email = email.replace("=", "");
+		
+		//owner 가져오기
+		ChatMemberVO mem = new ChatMemberVO();
+		mem.setId(email);
+		mem = chatService.getRoomMember(mem);
+		String owner = chatService.getRoomOwner(mem.getRoom());
+		//user가져오기
+		UserVO vo = new UserVO();
+		vo.setEmail(email);
+		vo = userService.getUserVO(vo);
+		
+		return vo.getSubscribe().contains(owner);
+	}
 }

@@ -23,7 +23,7 @@
 		border-collapse: collapse;
 	    margin: 5px;
 	    width: 99%;
-	    font-size: 15px;
+	    font-size: 17px;
 	}
 	
 	tbody {

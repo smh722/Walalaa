@@ -94,9 +94,10 @@
                margin:0 auto;
       }
       label{
-         width: 138px;
-         text-align: right;
-         margin-right: 30px;
+      	font-size:  15px;
+        width: 138px;
+        text-align: right;
+        margin-right: 30px;
       }
       .formcenter{
          margin-left: 210px;
@@ -114,7 +115,7 @@
       <div class="formcenter" >
       <h3>방송 설정</h3>
       <br>
-      <form class="form-inline" name="my_form" id="createForm" action="createChatRoom.do" enctype="multipart/form-data">
+      <form class="form-inline" name="my_form" id="createForm" action="createChatRoom.do" method="POST"  enctype="multipart/form-data">
          <input type="hidden" id="chkRoomName" value=""> <!-- 방 제목 중복 확인 여부 -->
          <div class="form-group">
             <label for="exampleInputName2">방송제목: </label> 
@@ -135,8 +136,8 @@
          <div class="form-inline form-group">
             <label for="exampleInputName2">썸네일: </label>
             <span class="btn btn-default btn-file">
-               <input type="file" id="uploadFile">
-               <img id="blah" src="#" alt="(권장)500*300 ">
+               <input type="file" id="uploadFile" class="btn" name ="thumbnail">
+               <img id="blah" src="#" alt="(권장)240*140 " style="width:240px; height:140px;">
             </span>
          </div>
          <br>
@@ -144,7 +145,7 @@
          <div class="form-group">
             <label for="exampleInputName2">워터마크 이미지: </label>
             <span class="btn btn-default btn-file">
-               <input type="file" id="imgInp1">
+               <input type="file" id="imgInp1" class="btn">
                <img id="blah1" src="#" alt="(권장)50*50 ">
             </span>
          </div>
@@ -175,7 +176,7 @@
          <div class="form-group">
             <fieldset id="setting_radio1">
                <label for="exampleInputName2">공개 범위:</label>
-               <input type="radio"   name="setting_radio1">공개
+               <input type="radio" name="setting_radio1" checked>공개
                <input type="radio" name="setting_radio1">비공개
             </fieldset>
          </div>
@@ -185,18 +186,18 @@
             <div>
                <fieldset id="setting_radio2">
                   <label for="exampleInputName2">실시간 채팅:</label>
-                  <input type="radio" name="setting_radio2">활성화
+                  <input type="radio" name="setting_radio2" checked>활성화
                   <input type="radio" name="setting_radio2">비활성화
                </fieldset>
             </div>
             <div style="margin-left:6px; ">
-               <input value="고급설정" onclick="if(this.parentNode.getElementsByTagName('div')[0].style.display != ''){this.parentNode.getElementsByTagName('div')[0].style.display = '';this.value = '숨기기';}else{this.parentNode.getElementsByTagName('div')[0].style.display = 'none'; this.value = '고급설정';}"
+               <input value="고급설정" class="btn" onclick="if(this.parentNode.getElementsByTagName('div')[0].style.display != ''){this.parentNode.getElementsByTagName('div')[0].style.display = '';this.value = '숨기기';}else{this.parentNode.getElementsByTagName('div')[0].style.display = 'none'; this.value = '고급설정';}"
                type="button"/>
                <div id='checkbox_div' style="display:none; border: 1px solid; padding: 10px 10px 10px 10px; border-color:lightgrey;">
                   <input type="checkbox" name='filterword' onclick="check_all();" value='' />전체<br />
-                  <input type="checkbox" name='filterword' onclick="not_check();" checked value='badword'>비속어<br>
-                  <input type="checkbox" name='filterword' onclick="not_check();" value='ilbe_megal'>일베/메갈<br>
-                  <input type="checkbox" name='filterword' onclick="not_check();" value='adult'>성인<br>
+                  <input type="checkbox" name='filterword1' onclick="not_check();" checked value='badword'>비속어<br>
+                  <input type="checkbox" name='filterword2' onclick="not_check();" value='ilbe_megal'>일베/메갈<br>
+                  <input type="checkbox" name='filterword3' onclick="not_check();" value='adult'>성인<br>
                </div>
             </div>
          </div>

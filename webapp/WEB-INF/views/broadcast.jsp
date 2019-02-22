@@ -80,6 +80,7 @@ h4, h5 {
    padding: 10px 10px 10px 10px;
    border: 1px solid #2e9dfe;
    border-radius: 10px 10px 0 0;
+   font-size: 18px;
 }
 
 /* 메세지 입력란 */
@@ -104,7 +105,7 @@ h4, h5 {
    padding: 0 20px;
    height: 40px;
    border-radius: 0 0 10px 0;
-   font-size: 12px;
+   font-size: 20px;
    /*    부트스트랩 기본색 #337ab7  밝은파란색 2e9dfe*/
    background:
       url(${pageContext.request.contextPath}/assets/images/send_icon.png)
@@ -144,52 +145,59 @@ h4, h5 {
 }
 
 /*   방송 종료 버튼 */
-.brFinish_btn {
-	background: white;
-	border: none;
-	float: right;
+#brFinish_btn {
+   border: none;
+   float: right;
+   height: 35px;
+   background: url(${pageContext.request.contextPath}/assets/images/broadcast_finish2.png) center no-repeat;
+}
+#brFinish_btn:hover{
+    border: none;
+    float: right;
+	height: 35px;
+	background: url(${pageContext.request.contextPath}/assets/images/broadcast_finish_hover2.png) center no-repeat;
 }
 
 
 /*   이의제기 버튼 */
 #objbtn {
-	background:
-		url(${pageContext.request.contextPath}/assets/images/eej2.png) center
-		no-repeat #fff;
-	border: none;
+   background:
+      url(${pageContext.request.contextPath}/assets/images/eej2.png) center
+      no-repeat #fff;
+   border: none;
 }
 /* [호버] 이의제기 버튼 */
 #objbtn:hover {
-	background:
-		url(${pageContext.request.contextPath}/assets/images/eej2_hover.png) center
-		no-repeat #fff;
-	border: none;
+   background:
+      url(${pageContext.request.contextPath}/assets/images/eej2_hover.png) center
+      no-repeat #fff;
+   border: none;
 }
 
 
 /* 관리자창 버튼 */
 .btn_manage {
-	float: right;
-	position: relative;
-	height:30px;
-	margin-top: 5px;
-	margin-right:5px;
-	background:
-	url(${pageContext.request.contextPath}/assets/images/manage_btn.png) center
-	no-repeat #fff;
-	border: none;
+   float: right;
+   position: relative;
+   height:30px;
+   margin-top: 5px;
+   margin-right:5px;
+   background:
+   url(${pageContext.request.contextPath}/assets/images/manage_btn.png) center
+   no-repeat #fff;
+   border: none;
 }
 /* [호버] 관리자창 버튼 */
 .btn_manage:hover {
-	float: right;
-	position: relative;
-	height:30px;
-	margin-top: 5px;
-	margin-right:5px;	
-	background:
-	url(${pageContext.request.contextPath}/assets/images/manage_btn_hover.gif) center
-	no-repeat #fff;
-	border: none;
+   float: right;
+   position: relative;
+   height:30px;
+   margin-top: 5px;
+   margin-right:5px;   
+   background:
+   url(${pageContext.request.contextPath}/assets/images/manage_btn_hover.gif) center
+   no-repeat #fff;
+   border: none;
 }
 
 .video-container {
@@ -228,6 +236,10 @@ h4, h5 {
 input.chat {
    height: 60px;
 }
+
+#warnCnt{
+	border: none;
+}
 </style>
 
 <style type="text/css">
@@ -243,19 +255,19 @@ button::after {
 </style>
 
 <script>
-	String.prototype.replaceAll = function(search, replacement) {
-	    var target = this;
-	    return target.replace(new RegExp(search, 'g'), replacement);
-	};
+   String.prototype.replaceAll = function(search, replacement) {
+       var target = this;
+       return target.replace(new RegExp(search, 'g'), replacement);
+   };
 
-   function manage() {
-      window.open("about:blank").location.href = "manage.do";
+   function manage(roomNum) {
+     console.log($("[name='roomNum']").val());
+     //num = document.getElementById('roomNum').value;
+      //window.open("about:blank").location.href = "manage.do";
+      $("#manageform").submit();
    }
 
-   function hideDiv() {
-      document.getElementById("subscribe_img").style.display = "none";
-   }
-   self.setTimeout("hideDiv()", 3000); // 초 지정
+   
 </script>
 
 <script type="text/javascript">
@@ -273,7 +285,7 @@ button::after {
                ws = new WebSocket("ws://localhost:8181/Walalaa/echo.do");
             } else {
                // 그 외 회원은 admin을 제외한 다른 아이디로 접속 시, 채팅참여가 가능하다.
-               ws = new WebSocket("ws://192.168.0.9:8181/Walalaa/echo.do");
+               ws = new WebSocket("ws://175.209.90.138:1003/Walalaa/echo.do");
             }
 
             //서버로 메세지 보낼때
@@ -328,24 +340,30 @@ button::after {
                var jsonData = JSON.parse(message.data);
                var msg = jsonData.message;
                if (jsonData.message != null) {
-					if(msg.includes("B%A%D")){
-						var rep = "&/%!"
-						msg = msg.replaceAll("&/%!", "");
-						msg = msg.replaceAll("B%A%D", "");
-						console.log(msg);
-						window.open("sendobj.do?msg="+msg,",이의제기하기","width=1000px, height=400px");
-					}else{
-              			 //메세지 
-	                	if (msg.includes("#^$bad")) {
-			                alert("비속어감지");
-			                $("#chatLog").append("<b style='background-color:red;'>"+msg.substring(6)+"<b>"+"<br>");
-			                $("#chatLog").scrollTop(99999999);
-		                }else{
-			                $("#chatLog").append(jsonData.message + "<br>");
-			                $("#chatLog").scrollTop(99999999);
-		                }
-	               }
-				}
+               if(msg.includes("B%A%D")){
+                  msg = msg.replaceAll("&/%!", ":");
+                  msg = msg.replaceAll("B%A%D", "/");
+                  console.log(msg);
+                  window.open("sendobj.do?msg="+msg,",이의제기하기","width=1000px, height=400px");
+               }else if(msg.includes("broadcast&end")){
+            	   alert("방송이 종료되었습니다.");
+            	   loction.href="main.do";
+               }else{
+                        //메세지 
+                        if(msg.includes("#^$userbad")){
+	                        alert("사용자가 이 채팅을 싫어합니다. 하지마세요");
+	                        $("#chatLog").append("<b style='color: orange; font-size: 30px;'>"+msg.substring(10)+"<b>"+"<br>");
+	                        $("#chatLog").scrollTop(99999999);
+                        }else if (msg.includes("#^$bad")) {
+                         alert("비속어감지");
+                         $("#chatLog").append("<b style='color: red; font-size: 30px;'>"+msg.substring(6)+"<b>"+"<br>");
+                         $("#chatLog").scrollTop(99999999);
+                      }else{
+                         $("#chatLog").append(jsonData.message + "<br>");
+                         $("#chatLog").scrollTop(99999999);
+                      }
+                  }
+            }
             };
 
             //닫힐때
@@ -355,6 +373,35 @@ button::after {
             
    });
 </script>
+	<script>
+		 $(document).ready(
+	         function() {
+	                 var id = "";
+	                 id = $("#userId").val();
+	                       $.ajax({
+	                            type : "post",
+	                            url : "${pageContext.request.contextPath}/ownerCheck.do",
+	                            data : id,
+	                            success : function(check){
+	        	                    if(check){
+	        	                    }else{
+	        	                    	var settingBtn = document.getElementById('a_broadcast_setting');
+	        	                    	var manageBtn = document.getElementById('manageBtn');
+	        	                    	var brFinishBtn = document.getElementById('brFinish_btn');
+										settingBtn.style.display = 'none';
+										manageBtn.style.display = 'none';
+										brFinishBtn.style.display = 'none';
+	        	                    	
+	        	                    	
+	        	                    }
+	                            },
+	                             error : function(XHR, status, error) {
+	                                 console.error(status + " : " + error);
+	                             }     
+	                          });
+	         });
+	</script>
+	
 
 </head>
 <body>
@@ -367,46 +414,47 @@ button::after {
    <!-- 현재 유저가 접속한 방이름 -->
 
    <header>
-      <jsp:include page="search_navbar.jsp"></jsp:include>
+         <jsp:include page="search_navbar.jsp"></jsp:include>
    </header>
-	 
+    
+   <form id="finishform" action="broadcast_finish.do">
+         <input type="hidden" id="roomNum" name="roomNum" value='${roomNum}'>
+   </form>
+   
+   <form id="manageform" action="manage.do" target="_blank">
+         <input type="hidden" id="roomNum" name="roomNum" value='${roomNum}'>
+   </form>
+   
    <div class="main sub">
-     <form id="finishform" action="broadcast_finish.do">
-      <input type="hidden" id="roomNum" name="roomNum" value='${roomNum }'>
       <!-- 현재 유저가 접속한 방이름 -->
+      <form id=chat>
          <table id="broad">
             <tr>
                <td>
                   <h4>
-                     <strong>[배틀그라운드] 솔쿼드 38킬 신기록 달성!! | 김성태 솔쿼드</strong>
+                     <strong>${roomName }</strong>
                   </h4> <a id="a_broadcast_setting" href="broadcast_setting.do">&nbsp;·&nbsp;방송설정</a>
-					
-
-<!-- 방송종료버튼 -->     <button class="brFinish_btn" onclick="finish('${roomNum}');">
-							<img src="${pageContext.request.contextPath}/assets/images/broadcast_finish.png" height="40px">
-							<img src="${pageContext.request.contextPath}/assets/images/broadcast_finish_hover.png" height="40px">
-						</button>
-                  		
+               
+<!-- 방송종료버튼 --><input type="button" id="brFinish_btn" value='          ' onclick="finish('${roomNum}');">
+<%--                      <img src="${pageContext.request.contextPath}/assets/images/broadcast_finish1.png" height="40px"> --%>
 
                </td>
                <td colspan="3" class="chatting_box_title">
                   <h4>&nbsp;실시간 채팅</h4>
-                  <h5 style="margin-left: 4px;">· 159명 시청중 ·</h5> <a href="#"> 
-                  <img class="subscribe" alt="구독누름(구독중)" src="${pageContext.request.contextPath}/assets/images/subscribe_on.png"></a>
+                  <h5 style="margin-left: 4px;">· <b id="rmCnt"></b>명 시청중 ·</h5> <a href="#"> 
+                  <img id="subscribe" class="subscribe" alt="구독누름(구독중)" src="${pageContext.request.contextPath}/assets/images/subscribe_on.png"></a>
                   <a href="#"> 
-                  <img class="subscribe" alt="구독안누름" src="${pageContext.request.contextPath}/assets/images/subscribe_off.png"></a>
-                  <button type="button" class="btn btn-primary btn_manage" onclick="manage();">
-                     <span class="glyphicon glyphicon-cog"></span>
-                  </button>
+                  <img id="doSubscribe"class="subscribe" alt="구독안누름" src="${pageContext.request.contextPath}/assets/images/subscribe_off.png"></a>
+                  <input type="button" id="manageBtn" class="btn_manage" value="   " onclick="manage('${roomNum}');" style="width: 30px;">
                </td>
             </tr>
             <tr>
                <td rowspan="3" id="broadScreen">
                   <div class="video-container">
-                     <div id="subscribe_img" style="position: relative; z-index: 2; float: left; top: 0px;">
+                     <div id="subscribe_img" style="position: relative; z-index: 2; float: left; top: 0px; display: none;">
                         <img src="${pageContext.request.contextPath}/assets/images/heart_moving2.gif" alt="구독 감사"> 
                         <font color="white" size="5px" style="position: relative; z-index: 3; float: left; top: 55px; left: 20px;">
-                           <strong>쏠님이 구독!</strong>
+                           <strong>${login.nickname }님이 구독!</strong>
                         </font>
                      </div>
                      <!--  자동재생소스추가하려면   ?rel=0&autoplay=1 -->
@@ -421,9 +469,9 @@ button::after {
                <td class="col-xs-1w" colspan="3">
                   <input id="name" class="name" type="hidden" readonly> 
                   <img class="name" alt="유저이미지" width="28px" height="28px" src="${pageContext.request.contextPath}/assets/images/logo_profile.png">
-                  <strong>막창사랑</strong> · 
+                  <strong>${login.nickname }</strong> · 
                   <font color="red" size="2">
-                     <input type='button' id='objbtn' value='이의있소!!!'>
+                     <input type='button' id='objbtn' value='                       '>
                      <input type='text' id='warnCnt' value=''>
                   </font>
                </td>
@@ -449,6 +497,36 @@ button::after {
       }
       
    </script>
+   <script>
+		 $(document).ready(
+	         function() {
+	                 var id = "";
+	                 id = $("#userId").val();
+	                       $.ajax({
+	                            type : "post",
+	                            url : "${pageContext.request.contextPath}/subScribecheck.do",
+	                            data : id,
+	                            success : function(check){
+	                            	alert("check :" + check);
+	        	                    	var doSubscribeBtn = document.getElementById('doSubscribe');
+	        	                    	var delSubscribeBtn = document.getElementById('subscribe');
+	        	                    if(check){
+	        	                    	doSubscribeBtn.style.display = "none";
+	        	                    	delSubscribeBtn.style.display = "";
+	        	                    	
+	        	                    }else{
+	        	                    	doSubscribeBtn.style.display = "";
+	        	                    	delSubscribeBtn.style.display = "none";
+	        	                    	
+	        	                    	
+	        	                    }
+	                            },
+	                             error : function(XHR, status, error) {
+	                                 console.error(status + " : " + error);
+	                             }     
+	                          });
+	         });
+	</script>
    <script>   
       
    $(function() {
@@ -461,21 +539,87 @@ button::after {
                     async: true,
                     data : id,
                     success : function(warnCnt){
-                    if(warnCnt>=3){
-                    	$("#warnCnt").val("경고" + warnCnt + "회 로 인해 채팅금지상태입니단");
-                    	$('#message').attr('readonly',true);
-                    	$('#message').attr('style','background-color:gray;'); 
-                    }else{
-                    	$("#warnCnt").val("경고" + warnCnt + "회");
-                    }
-                     },
+	                    if(warnCnt[0]>=warnCnt[1]){
+	                       $("#warnCnt").val("경고" + warnCnt[0] + "회 로 인해 채팅금지상태입니단");
+	                       $('#message').attr('readonly',true);
+	                       $('#message').attr('style','background-color:gray;'); 
+	                    }else{
+	                       $("#warnCnt").val("경고" + warnCnt[0] + "회");
+	                       $('#message').attr('readonly',false);
+	                       $('#message').attr('style','background-color:none;'); 
+	                    }
+                    },
                      error : function(XHR, status, error) {
 //                         console.error(status + " : " + error);
                      }     
                   });
-      }, 50000); // 1초에 한번씩 받아온다.
+      }, 5000); // 1초에 한번씩 받아온다.
    });
 
+</script>
+   <script>   
+      
+   $(function() {
+      timer = window.setInterval( function () {
+         var num = $("#roomNum").val();
+               $.ajax({
+                    type : "post",
+                    url : "${pageContext.request.contextPath}/getremainCnt.do",
+                    data : {num: num},
+                    success : function(Rcount){
+                    	$("#rmCnt").empty();
+						$("#rmCnt").append(Rcount);
+                    
+                    },
+                     error : function(XHR, status, error) {
+//                         console.error(status + " : " + error);
+                     }     
+                  });
+      }, 1000); // 1초에 한번씩 받아온다.
+   });
+
+</script>
+<script>
+	$("#doSubscribe").on("click", function(){
+		
+		document.getElementById("subscribe_img").style.display = "";
+		setTimeout("hideDiv()", 3000);
+		 var id = "";
+         id = $("#userId").val();
+		 $.ajax({
+             type : "post",
+             url : "subScribe.do",
+             data : id,
+             success : function(){
+                 document.getElementById("doSubscribe").style.display="none";
+                 document.getElementById("subscribe").style.display="";
+             },
+              error : function(XHR, status, error) {
+                 console.error(status + " : " + error);
+              }     
+           });
+	});
+	$("#subscribe").on("click", function(){
+		
+		 var id = "";
+         id = $("#userId").val();
+		 $.ajax({
+             type : "post",
+             url : "delsubScribe.do",
+             data : id,
+             success : function(){
+                 document.getElementById("doSubscribe").style.display="";
+                 document.getElementById("subscribe").style.display="none";
+             },
+              error : function(XHR, status, error) {
+                 console.error(status + " : " + error);
+              }     
+           });
+	});
+	
+	function hideDiv() {
+		document.getElementById("subscribe_img").style.display = "none";
+		}
 </script>
 </body>
 </html>

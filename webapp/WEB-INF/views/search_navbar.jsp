@@ -29,7 +29,8 @@
 <!-- <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
 
  <style type="text/css">
-   
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+
 /*    써치 빠 입력부분 */
    .searchtxt {
    padding: 10px 10px 10px 40px;
@@ -91,90 +92,90 @@
       }
    </script>
    <style type="text/css">
-      body {
-         margin-top: 10px;
-      }
-      
-      .navmenu {
-         margin-top: -3px;
-         width: 240px;
-         position:relative;
-      }
-      .logo{
-         margin-right: 20px;
-      }
+body {
+	margin-top: 10px;
+	font-family: 'Jeju Gothic', sans-serif;
+}
 
-      .topbar {
-         width: 1080px;
-         height: 45px;
-         display: flex;
-         margin: 0 auto;
-      }
-      
-      .dropdown {
-         display: inline-block;
-      }
-      
-      ul {
-         list-style: none;
-      }
-      
-      hr{
-         margin-top: 3px;
-      }
-      
+.navmenu {
+	margin-top: -3px;
+	width: 240px;
+	position: relative;
+}
+
+.logo {
+	margin-right: 20px;
+}
+
+.topbar {
+	width: 1080px;
+	height: 45px;
+	display: flex;
+	margin: 0 auto;
+}
+
+.dropdown {
+	display: inline-block;
+}
+
+ul {
+	list-style: none;
+}
+
+hr {
+	margin-top: 3px;
+}
+
 /*       로고 이미지 확대를 위한  css       */
-      .scale {
-         transform: scale(1);
-         -webkit-transform: scale(1);
-         -moz-transform: scale(1);
-         -ms-transform: scale(1);
-         -o-transform: scale(1);
-         transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
-      }
-      
+.scale {
+	transform: scale(1);
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	-o-transform: scale(1);
+	transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
+}
+
 /*       로고 이미지 호버시 확대        */
-      .scale:hover {
-         transform: scale(1.2);
-         -webkit-transform: scale(1.2);
-         -moz-transform: scale(1.2);
-         -ms-transform: scale(1.2);
-         -o-transform: scale(1.2);
-      }
-      
-      
-      .img_scale { /*width:325px; height:280px;*/
-         overflow: hidden
-      } /* 부모를 벗어나지 않고 내부 이미지만 확대 */
-      
-      .userbtn {
-         width: 40px;
-         height: 40px;
-         padding-left: 0px;
-         padding-right: 0px;
-         color: #4682B4;
-         
-      }
-      
-      .navbar-right {
-          float: right !important;
-          margin-right: -15px;
-          margin-top: 2px;
-          display: flex;
-      }
-      
-      .logintext{
-       margin: auto;
-       padding-left: 10px;
-      }
-      
-      .usernick {
-         min-width:10px!important;
-      max-width:75%!important;
-      transition: width 0.25s;
-         border: none;
-      }
-   </style>
+.scale:hover {
+	transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-moz-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+	-o-transform: scale(1.2);
+}
+
+.img_scale { /*width:325px; height:280px;*/
+	overflow: hidden
+} /* 부모를 벗어나지 않고 내부 이미지만 확대 */
+.userbtn {
+	width: 40px;
+	height: 40px;
+	padding-left: 0px;
+	padding-right: 0px;
+	color: #4682B4;
+}
+
+.navbar-right {
+	float: right !important;
+	margin-right: -15px;
+	margin-top: 2px;
+	display: flex;
+}
+
+.logintext {
+	margin: auto;
+	padding-left: 10px;
+}
+
+.usernick {
+/* 	min-width: 10px !important; */
+/* 	max-width: 75% !important; */
+	transition: width 0.25s;
+	border: none;
+	margin-right: 20px;
+}
+</style>
 
 </head>
 <body>
@@ -205,7 +206,7 @@
                <button id="btn_profile" class="btn dropdown-toggle userbtn btn-group" type="button" data-toggle="dropdown" style="padding-left: 1px; padding-right: 1px;">
 <%--                   <img alt="유저이미지" src="${pageContext.request.contextPath}/assets/images/user_login.png" width="30px"> --%>
                   </button>
-                  <input class="usernick" type="text" value=${login.nickname} id="usernick" readonly/>
+                  <input class="usernick" type="text" value=${login.nickname} id="usernick" style="width: 51px;" readonly/>
                   <ul class="dropdown-menu" style="left: 0;">
                       <li><a href="mychannel.do">내 채널</a></li>
                      <li><a href="#">마이페이지</a></li>
@@ -233,26 +234,23 @@
          console.log("ready() email : " + email);
             //데이타요청
             $.ajax({
-               url : "getChatOwner.do",
+               url : "checkChatmember.do",
                type : "post",
                data: email,
                success : function(data){
                   console.log("function success");
                   if(data == 0){
                      console.log("방송 안함");
-                    $("#brFinish").show().hide();
                     $("#brStart").show();
                   } else{
                      console.log("방송 함");
                     $("#brStart").show().hide();
-                    $("#brFinish").show();
                   }
                   
                   //$("#liveroom").append(str);     
                },
                error : function(XHR, status, error) {
                   console.log("로그인 안함");
-                 $("#brFinish").show().hide();
                  $("#brStart").show();
                }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
             
@@ -270,16 +268,6 @@
          $("#usrimg").show().hide();
       }
       
-      function resizable (el, factor) {
-           var number = Number(factor) || 7.7;
-           function resize() {
-              el.style.width = ((el.value.length+1) * number) + 'px';
-          }
-           var e = 'blur,change'.split(',');
-           for (var i in e) el.addEventListener(e[i],resize,false);
-           resize();
-      }
-      resizable(document.getElementById('usernick'),7);
       
       
    </script>

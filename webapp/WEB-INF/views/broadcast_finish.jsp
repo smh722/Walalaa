@@ -88,23 +88,24 @@
    <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" /> <!-- 현재 유저가 접속한 방이름 -->
 	
    <div class="pageset">
-      <form class="form-inline" name="save_broad" style="display: flex;"action="">
+      <form class="form-inline" name="save_broad" style="display: flex;" action="uploadChat.do" method="post" enctype="multipart/form-data">
+   <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" />
       <div class="infopage">
             <h3>영상 정보</h3>
             <div class="form-group">
                   <label for="exampleInputName2">제목: </label>
-                  <input type="text" class="form-control" id="exampleInputName2" style="width: 500px;" value="배그 랭킹1위 막창사랑님의 방송>< 다 드루와~~">               
+                  <input type="text" class="form-control" id="exampleInputName2" name ="name" style="width: 500px;" value="${chat.name }">               
             </div>
             <div class="form-group">
                   <label for="exampleInputEmail2">설명:</label>
-                  <textarea class="form-control" rows="3" style="width: 500px;">배그 랭킹1위 막창사랑이 와뜨아! 지리는 에임, 스크림 최다릴 보유!! 지금 현재 킬당 만원 미션즁</textarea>
+                  <textarea class="form-control" rows="3" style="width: 500px;" name ="content">${chat.content }</textarea>
             </div>
             <div class="form-inline form-group">
                <label for="exampleInputName2">썸네일: </label>
                <span class="btn btn-default btn-file">
-                  <input type="file" id="imgInp">
-                  <img id="blah" src="${pageContext.request.contextPath}/assets/images/game_screen.png" alt="(권장)500*300" style="width: 480px;">
-               </span>
+                  <input type="file" id="imgInp" name="thumbnail" value="">
+                  <img id="blah" src="${pageContext.request.contextPath}${chat.thumbnail}" alt="(권장)240*140" style="width: 300px; height: 140px;">
+               </span>         
             </div>
             <div class="form-group">
                   <label for="exampleInputEmail2">방송시간:</label>
@@ -128,7 +129,7 @@
             <div class="form-group" style="margin-right: 230px;">
                <fieldset id="save_radio1">
                   <label for="exampleInputName2">업로드:</label>
-                  <input type="radio"   name="save_radio1">공개
+                  <input type="radio" name="save_radio1" checked>공개
                   <input type="radio" name="save_radio1">비공개
                   <input type="radio" name="save_radio1">예약
                </fieldset>
@@ -136,7 +137,7 @@
             <div class="form-group">
                <fieldset id="save_radio2">
                   <label for="exampleInputName2">저장:</label>
-                  <input type="radio"   name="save_radio2">저장
+                  <input type="radio"   name="save_radio2" checked>저장
                   <input type="radio" name="save_radio2">저장안함
                </fieldset>
             </div>
@@ -149,8 +150,8 @@
             <div class="chatScreen">
                <textarea id="chatLog" class="chat_log textarea" readonly ></textarea>
             </div>
-            <div class="submit_btn" align="center">
-               <input type="submit" id="save" value="확인" />
+            <div class="submit_btn " align="center">
+               <input type="submit" class="btn btn-primary" id="save" value="확인" />
             </div>
       </div>
       </form>

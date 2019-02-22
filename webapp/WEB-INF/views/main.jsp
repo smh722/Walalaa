@@ -44,34 +44,40 @@
          margin: 0 auto;
          margin-top: 30px;
       }
+      
+      .thumbnail {
+       width: 260px;
+       height: 280px;
+      }
    </style>
+ 
    <script type="text/javascript">
    
    var str = "";
 
       $(document).ready(function(){
+    	  var i=0;
          //데이타요청(채팅방 리스트)aa
          $.ajax({
             url : "getRoomList.do",
             type : "post",
-            
+            contentType: "application/json; charset=utf8",
             dataType : "json",
             success : function(RoomList){
-               console.log(RoomList);
-               lineStart();
-               var endNum = RoomList.length - 1;
-               for(var i=0; i<RoomList.length; i++){
+            	
+            	lineStart();
+            	for(var i=0; i<RoomList.length; i++){
                   if(i%4==0 && i!=0){
-                     lineRender(RoomList[i], "down");
+                     lineRender(RoomList[i]);
                      
                   }else{
-                     render(RoomList[i], "down");
+                     render(RoomList[i]);
                   }
-               }
-               lineEnd();
-               $("#liveroom").append(str);
-               /* 화면그리기 */
-               //render(guestbookVo);      
+            	 
+            	}
+	               lineEnd();
+	               $("#liveroom").append(str);
+            	
             },
             error : function(XHR, status, error) {
                console.error(status + " : " + error);
@@ -85,67 +91,143 @@
       function lineStart(){
          //var str = "";
          
-         str += "<div class=\"plzrow\">";
-         str += " <div class=\"row\" style=\"display: flex; margin-left:0px;\">";
+         str += "<div class='plzrow'>";
+         str += " <div class='row' style='display: flex; margin-left:0px;'>";
          
          //$("#liveroom").append(str);   
          console.log("lineStart() 실행");
       }
-      function render(ChatVO, updown){
-         //var str = "";
-         str += "   <div class=\"boradbox img_scale\">";
-         str += "      <div class=\"thumbnail scale\">";
-         str += "         <a href=\"#\" onclick=\"moveRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
-         str += "         <img src=\"${pageContext.request.contextPath}/assets/images/battleground.jpg\" class=\"img-responsive\" alt=\"썸네일 \"></a>";
-         str += "         <div class=\"caption\">";
-         str += "            <h4>" +ChatVO.name+"</h4>";
-         str += "            <p> RickyOffical</p>";
-         str += "            <p> 조회수 5만 4분전</p>";
-         str += "         </div>";
-         str += "      </div>";
-         str += "   </div>";
-         
-         if(updown == "up"){
-            //$("#liveroom").prepend(str);   
-         }else if(updown == "down"){
-            //$("#liveroom").append(str);   
-         }else{
-            console.log("입력오류");
-         }
-         
-         console.log("render() 실행");
-         
-      }   
-      function lineRender(ChatVO, updown){
-         //var str = "";
-         str += "</div>";
-         str += "<div class=\"row\" style=\"display: flex; margin-left:0px;\">";
-         str += "   <div class=\"boradbox img_scale\">";
-         str += "      <div class=\"thumbnail scale\">";
-         str += "         <a href=\"#\" onclick=\"moveRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
-         str += "         <img src=\"${pageContext.request.contextPath}/assets/images/battleground.jpg\" class=\"img-responsive\" alt=\"썸네일 \"></a>";
-         str += "         <div class=\"caption\">";
-         str += "            <h4>" +ChatVO.name+"</h4>";
-         str += "            <p> RickyOffical</p>";
-         str += "            <p> 조회수 5만 4분전</p>";
-         str += "         </div>";
-         str += "      </div>";
-         str += "   </div>";
-         
-         if(updown == "up"){
-            //$("#liveroom").prepend(str);   
-         }else if(updown == "down"){
-            //$("#liveroom").append(str);   
-         }else{
-            console.log("입력오류");
-         }
-         console.log("lineRender() 실행");
-      }   
+      function render(ChatVO){
+          //var str = "";
+          str += "   <div class=\"boradbox img_scale\">";
+          str += "      <div class=\"thumbnail scale\">";
+          str += "         <a href=\"#\" onclick=\"moveRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
+          str += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
+          str += "         <div class=\"caption\">";
+          str += "            <h4>" +ChatVO.name+"</h4>";
+          str += "            <p>"+ ChatVO.usersNickname+"</p>";
+          str += "            <p> 조회수 "+ChatVO.views+"회 " +ChatVO.uploadtime+"</p>";
+          str += "         </div>";
+          str += "      </div>";
+          str += "   </div>";
+          
+          
+          
+       }   
+       function lineRender(ChatVO){
+          //var str = "";
+          str += "</div>";
+          str += "<div class=\"row\" style=\"display: flex; margin-left:0px;\">";
+          str += "   <div class=\"boradbox img_scale\">";
+          str += "      <div class=\"thumbnail scale\">";
+          str += "         <a href=\"#\" onclick=\"moveRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
+          str += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
+          str += "         <div class=\"caption\">";
+          str += "            <h4>" +ChatVO.name+"</h4>";
+          str += "            <p>"+ ChatVO.usersNickname+"</p>";
+          str += "            <p> 조회수 "+ChatVO.views+"회 " +ChatVO.uploadtime+"</p>";
+          str += "         </div>";
+          str += "      </div>";
+          str += "   </div>";
+          
+       }   
       function lineEnd(){
          //var str = "";
          
          str += " </div>";
          str += "</div>";
+         
+         //$("#liveroom").append(str);   
+         console.log("lineEnd() 실행");
+      }
+         
+//       }   
+   </script>
+   <script type="text/javascript">
+   
+   var stri = "";
+
+      $(document).ready(function(){
+    
+         //데이타요청(업로드 된 영상)aa
+         $.ajax({
+            url : "getUploadList.do",
+            type : "post",
+            contentType: "application/json; charset=utf8",
+            dataType : "json",
+            success : function(uploadList){
+            	lineStart2();
+            	for(var j=0; j<uploadList.length; j++){
+                  if(j%4==0 && j!=0){
+                     lineRender2(uploadList[j]);
+                     
+                  }else{
+                     render2(uploadList[j]);
+                  }
+            	 
+            	}
+	               lineEnd2();
+	               $("#uploaded").append(stri);
+            	
+            },
+            error : function(XHR, status, error) {
+               console.error(status + " : " + error);
+            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+      
+         });
+         //그리기 render사용as
+         
+      });
+
+      function lineStart2(){
+         //var str = "";
+         
+         stri += "<div class='plzrow'>";
+         stri += " <div class='row' style='display: flex; margin-left:0px;'>";
+         
+         //$("#liveroom").append(str);   
+         console.log("lineStart() 실행");
+      }
+      function render2(ChatVO){
+         //var str = "";
+         stri += "   <div class='boradbox img_scale'>";
+         stri += "      <div class='thumbnail scale'>";
+         stri += "         <a href='#' onclick='moveRoom()'>";
+         stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
+         stri += "         <div class='caption'>";
+         stri += "            <h4>" +ChatVO.name+"</h4>";
+         stri += "            <p> "+ChatVO.usersNickname+"</p>";
+         stri += "            <p> 조회수 "+ChatVO.views+"회  "+ChatVO.uploadtime+" </p>";
+         stri += "         </div>";
+         stri += "      </div>";
+         stri += "   </div>";
+         
+         
+         console.log("render() 실행");
+         
+      }   
+      function lineRender2(ChatVO){
+         //var str = "";
+         stri += "</div>";
+         stri += "<div class='row' style='display: flex; margin-left:0px;'>";
+         stri += "   <div class='boradbox img_scale'>";
+         stri += "      <div class='thumbnail scale'>";
+         stri += "         <a href='#' onclick='moveRoom("+ChatVO.name+", "+ChatVO.remaincount+", "+ChatVO.totalcount+")'>";
+         stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width:240px; height:140px;'></a>";
+         stri += "         <div class='caption'>";
+         stri += "            <h4>" +ChatVO.name+"</h4>";
+         stri += "            <p> "+ChatVO.usersNickname+"</p>";
+         stri += "            <p> 조회수 "+ChatVO.views+"회  "+ChatVO.uploadtime+" </p>";
+         stri += "         </div>";
+         stri += "      </div>";
+         stri += "   </div>";
+         
+      }   
+      function lineEnd2(){
+         //var str = "";
+         
+         stri += " </div>";
+         stri += "</div>";
          
          //$("#liveroom").append(str);   
          console.log("lineEnd() 실행");
@@ -160,73 +242,35 @@
    <header>
       <jsp:include page="search_navbar.jsp"></jsp:include>
    </header>
-
+	
    <div class="pageset">
-      <h3>실시간 스트리밍</h3>
-      <form action="MoveChatRoom.do" method="post" id="moveChatForm">
-		<input type="hidden" name="roomName" value="">
-      	<div id="liveroom" style="display: flex; margin-left:0px;"></div>
-      </form>
-      <h3>인기 업로드</h3>
-      <div class="row" style="display: flex; margin-left:0px;">
-         <div class="boradbox img_scale">
-            <div class="thumbnail scale">
-               <a href="broadcast.do"> 
-               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
-               <div class="caption">
-                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
-                  <p>RickyOffical</p>
-                  <p>조회수 5만 4분전</p>
-               </div>
-            </div>
-         </div>
-
-         <div class="boradbox img_scale">
-            <div class="thumbnail scale">
-               <a href="broadcast.do"> 
-               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
-               <div class="caption">
-                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
-                  <p>RickyOffical</p>
-                  <p>조회수 5만 2분전</p>
-               </div>
-            </div>
-         </div>
-
-         <div class="boradbox img_scale">
-            <div class="thumbnail scale">
-               <a href="broadcast.do"> 
-               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
-               <div class="caption">
-                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
-                  <p>RickyOffical</p>
-                  <p>조회수 5만 7분전</p>
-               </div>
-            </div>
-         </div>
-
-         <div class="boradbox img_scale">
-            <div class="thumbnail scale">
-               <a href="broadcast.do"> 
-               <img src="${pageContext.request.contextPath}/assets/images/battleground.jpg" class="img-responsive" alt="썸네일 "></a>
-               <div class="caption">
-                  <h4>[RickyTV] 사녹에서 치킨먹기</h4>
-                  <p>RickyOffical</p>
-                  <p>조회수 5만 7분전</p>
-               </div>
-            </div>
-         </div>
+   
+   <div class="channelimage">
+      <div class="profilebg">
+      <a href="http://pubg.game.daum.net/pubg/index.daum">
+         <img class="image2" src="${pageContext.request.contextPath}/assets/images/ad_PUBG200.gif"></a>
       </div>
    </div>
-    <!-- 방송 들어가기 -->
-   <script>
-	   function moveRoom(room,remaincount,totalcount,pwd) {
-			   
-			      //비밀번호가 없다면 바로 이동하도록한다.
-			      $("[name='roomName']").val(room);               
-			      $("#moveChatForm").submit();   
-	   }
-   </script>
    
+      <h3>실시간 스트리밍</h3>
+      <form action="MoveChatRoom.do" method="post" id="moveChatForm">
+      <input type="hidden" name="roomName" value="">
+         <div id="liveroom" style="display: flex; margin-left:0px;"></div>
+      </form>
+      <h3>인기 업로드</h3>
+      <form action="playUploaded.do" method="post" id="">
+         <div id="uploaded" style="display: flex; margin-left:0px;"></div>
+      </form>
+    <!-- 방송 들어가기 -->
+   
+   </div>
+     <script>
+     function moveRoom(room,remaincount,totalcount,pwd) {
+         
+         //비밀번호가 없다면 바로 이동하도록한다.
+         $("[name='roomName']").val(room);               
+         $("#moveChatForm").submit();   
+}
+   </script>
 </body>
 </html>
