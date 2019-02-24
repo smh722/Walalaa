@@ -190,10 +190,10 @@ hr {
          </a>
       </div>
       
-      <div class="col-xs-8 searchbar">
-      <form action="#">
-            <p><input type="text" name="search" class="searchtxt"><input type="submit" value="   " class="searchbtn"></p>
-         </form>
+            <div class="col-xs-8 searchbar">
+         <form id="searchForm" action="search_result.do" method="post">
+            <p><input type="text" id="tag" name="tag" class="searchtxt">
+            <button type="submit" value="     " class="searchbtn" ></button></p></form>
       </div>
       
       <div class="navmenu">

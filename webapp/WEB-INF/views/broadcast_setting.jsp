@@ -157,9 +157,9 @@
          </div>
          <br>
 
-         <div class="tag">
+          <div class="tag">
             <label for="exampleInputName2">태그 설정:</label>
-            <input type="text" class="form-control" placeholder="ex) 노래, 음식, 게임,(최대 50개-콤마로 구분)" style="width: 360px;">
+           <textarea class="form-control" name="tag" rows="3" placeholder="ex) 배그, 치킨먹는법, 사녹" style="width: 360px;"></textarea>>
          </div>
          <br>
 

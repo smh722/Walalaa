@@ -344,7 +344,7 @@ button::after {
                   msg = msg.replaceAll("&/%!", ":");
                   msg = msg.replaceAll("B%A%D", "/");
                   console.log(msg);
-                  window.open("sendobj.do?msg="+msg,",이의제기하기","width=1000px, height=400px");
+                  window.open("sendobj.do?msg="+msg,",이의제기하기","toolbar = 0, scrollbars = 1, statusbar = 0, menubar = 0, resizable = 0, width=450px, height=300px, left= 1000, top= 200");
                }else if(msg.includes("broadcast&end")){
             	   alert("방송이 종료되었습니다.");
             	   loction.href="main.do";

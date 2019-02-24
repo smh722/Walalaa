@@ -185,4 +185,9 @@ public class ChatDAO {
 		mybatis.update(ns + "incViews", name);
 	}
 
+	public List<ChatVO> getTagList(String tag) {
+		System.out.println("                                           DAO ############### " + tag);
+		return mybatis.selectList(ns + "getTagList", tag);
+	}
+
 }

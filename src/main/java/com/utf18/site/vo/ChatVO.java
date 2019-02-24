@@ -32,7 +32,7 @@ public class ChatVO implements Serializable {
 	private int views;  //조회수
 	private String uploadtime; // 방송 시작시간
 	private String usersNickname; // 유저 닉네임 조인전용
-	
+	private String tag;
 	
 	public ChatVO() {}
 
@@ -132,6 +132,14 @@ public class ChatVO implements Serializable {
 
 	public void setUploadtime(String uploadtime) {
 		this.uploadtime = uploadtime;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	@Override

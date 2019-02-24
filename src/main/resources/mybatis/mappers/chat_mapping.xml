@@ -24,8 +24,8 @@
   
    <!-- 방 생성 -->
    <insert id="createChatRoom" parameterType="com.utf18.site.vo.ChatVO">
-	   INSERT INTO CHAT (NUM, NAME, FILTERWORD, TOTALCOUNT,REMAINCOUNT, CONTENT, OWNER, THUMBNAIL, UPLOAD, VIEWS, UPLOADTIME)
-	   VALUES(CHAT_SEQ.NEXTVAL, #{name}, #{filterword},300, 0, #{content}, #{owner}, #{thumbnail}, '0', 0, sysdate)
+	   INSERT INTO CHAT (NUM, NAME, FILTERWORD, TOTALCOUNT,REMAINCOUNT, CONTENT, OWNER, THUMBNAIL, UPLOAD, VIEWS, UPLOADTIME, TAG)
+	   VALUES(CHAT_SEQ.NEXTVAL, #{name}, #{filterword},300, 0, #{content}, #{owner}, #{thumbnail}, '0', 0, sysdate, #{tag})
    </insert>
    
    <!-- 존재하는 방 리스트가져오기 -->
@@ -183,7 +183,7 @@
    </select>
   
   <update id="uploadChat" parameterType="com.utf18.site.vo.ChatVO">
-   UPDATE CHAT SET NAME = #{name}, CONTENT = #{content}, THUMBNAIL = #{thumbnail}, UPLOAD = '1'
+   UPDATE CHAT SET NAME = #{name}, CONTENT = #{content}, THUMBNAIL = #{thumbnail}, TAG = #{tag} UPLOAD = '1'
    WHERE NUM = #{num}
    </update>
   
@@ -219,5 +219,17 @@
   <update id="incViews" parameterType="String">
   UPDATE CHAT SET VIEWS = VIEWS + 1 WHERE NAME = #{name}
   </update>
+  
+  <!-- 검색 결과 리스트  -->
+    <select id="getTagList" resultType="com.utf18.site.vo.ChatVO" parameterType="String">
+      SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME
+      usersNickname FROM CHAT, USERS
+      WHERE users.email=chat.owner
+      AND CHAT.TAG LIKE '%'||#{tag}||'%'
+      OR CHAT.NAME LIKE '%'||#{tag}||'%'
+      OR CHAT.CONTENT LIKE '%'||#{tag}||'%'
+      OR USERS.NICKNAME LIKE '%'||#{tag}||'%'
+   </select>
+  
   
 </mapper>

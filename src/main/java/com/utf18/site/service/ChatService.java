@@ -195,5 +195,11 @@ public class ChatService {
 	public void incViews(String roomName) {
 		chatDAO.incViews(roomName);
 	}
+	 // 검색 기능
+	   public List<ChatVO> getTagList(String tag) {
+	      System.out.println("                                            서비스 ############### "+tag);
+	      return chatDAO.getTagList(tag);
+	   }
+
 
 }

@@ -122,9 +122,9 @@
                   <input type="text" class="form-control" id="exampleInputName2" 
                   style="width: 500px;" value="105명" readonly>
             </div>
-            <div class="form-group">
+              <div class="form-group">
                   <label for="exampleInputEmail2">태그설정:</label>
-                  <input type="text" class="form-control" id="exampleInputName2" style="width: 500px;" value="배그, 배틀그라운드, 막창사랑, 막사, 막창, 랭킹1위, 배그랭킹1위">
+                  <textarea class="form-control" rows="3" style="width: 500px;" name ="tag">${chat.tag }</textarea>
             </div>
             <div class="form-group" style="margin-right: 230px;">
                <fieldset id="save_radio1">
