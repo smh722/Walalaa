@@ -62,24 +62,9 @@
          }
       }
    
-      function check_all() {
-         for (i = 0; i < my_form.filterword.length; i++) {
-            my_form.filterword[i].checked = true;
-         }
-      }
+     
+     
    
-      function not_check() {
-         for (i = 1; i < my_form.filterword.length; i++) {
-            if (my_form.filterword[i].checked == false) {
-               my_form.filterword[0].checked = false;
-            }
-         }
-      }
-      function uncheck_all() {
-         for (i = 0; i < my_form.filterword.length; i++) {
-            my_form.filterword[i].checked = false;
-         }
-      }
    </script>
    <style>
       form.form-inline>div {
@@ -128,7 +113,7 @@
             <select   class="form-control input-lg" style="width: 360px;">
                <option>게임</option>
                <option>스포츠</option>
-               <option>음악</option>
+               <option>요리</option>
             </select>
          </div>
          <br>
@@ -159,7 +144,7 @@
 
           <div class="tag">
             <label for="exampleInputName2">태그 설정:</label>
-           <textarea class="form-control" name="tag" rows="3" placeholder="ex) 배그, 치킨먹는법, 사녹" style="width: 360px;"></textarea>>
+           <textarea class="form-control" name="tag" rows="3" placeholder="ex) 배그, 치킨먹는법, 사녹" style="width: 360px;"></textarea>
          </div>
          <br>
 
@@ -194,16 +179,16 @@
                <input value="고급설정" class="btn" onclick="if(this.parentNode.getElementsByTagName('div')[0].style.display != ''){this.parentNode.getElementsByTagName('div')[0].style.display = '';this.value = '숨기기';}else{this.parentNode.getElementsByTagName('div')[0].style.display = 'none'; this.value = '고급설정';}"
                type="button"/>
                <div id='checkbox_div' style="display:none; border: 1px solid; padding: 10px 10px 10px 10px; border-color:lightgrey;">
-                  <input type="checkbox" name='filterword' onclick="check_all();" value='' />전체<br />
-                  <input type="checkbox" name='filterword1' onclick="not_check();" checked value='badword'>비속어<br>
-                  <input type="checkbox" name='filterword2' onclick="not_check();" value='ilbe_megal'>일베/메갈<br>
-                  <input type="checkbox" name='filterword3' onclick="not_check();" value='adult'>성인<br>
+                  <input type="checkbox" class="check-all" id="check-all" name='filterword' value='' />전체<br />
+                  <input type="checkbox" class="filtercheck" name='filterword1' value='badword' checked>비속어<br>
+                  <input type="checkbox" class="filtercheck" name='filterword2' value='ilbe_megal'>일베/메갈<br>
+                  <input type="checkbox" class="filtercheck"name='filterword3'  value='adult'>성인<br>
                </div>
             </div>
          </div>
          <div align="center" style="padding-top: 30px; top:9px;">
-            <input class="btn btn-primary btn-lg" type="submit" value="방송하기">
-            <input class="btn btn-primary btn-lg" type="submit" value="설정저장">
+            <input class="btn btn-primary btn-lg" type="submit" value="방송하기" style="background: #2e9dfe;">
+            <input class="btn btn-primary btn-lg" type="submit" value="설정저장" style="background: #2e9dfe;">
          </div>
       </form>
       </div>
@@ -263,5 +248,18 @@
          $("#listPeople").slideToggle(300);
          $("#showCreateRoom").slideToggle(300);
       });
+   </script>
+   
+   <script>
+   // 전채선택 클릭시 기능
+   $('.check-all').click( function() {
+       $('.filtercheck').prop( 'checked', this.checked );
+    });
+   $('.filtercheck').click( function() {
+	   var checkallbox = document.getElementById("check-all");
+       if(checkallbox.checked == true){
+    	   $('.check-all').prop( 'checked', this.checked );
+       };
+    });
    </script>
 </body>

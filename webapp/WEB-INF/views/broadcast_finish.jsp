@@ -103,14 +103,14 @@
             <div class="form-inline form-group">
                <label for="exampleInputName2">썸네일: </label>
                <span class="btn btn-default btn-file">
-                  <input type="file" id="imgInp" name="thumbnail" value="">
-                  <img id="blah" src="${pageContext.request.contextPath}${chat.thumbnail}" alt="(권장)240*140" style="width: 300px; height: 140px;">
+                  <input type="file" id="imgInp" name="thumbnail" class="thumbnail" value="">
+                  <img id="blah" class="thumbnail_img"src="${pageContext.request.contextPath}${chat.thumbnail}" alt="(권장)240*140" style="width: 300px; height: 140px;">
                </span>         
             </div>
             <div class="form-group">
                   <label for="exampleInputEmail2">방송시간:</label>
                   <input type="text" class="form-control" id="exampleInputName2" 
-                  style="width: 500px;" value="1시간 29분 30초" readonly>
+                  style="width: 500px;" value="${broadTime }" readonly>
             </div>
             <div class="form-group">
                   <label for="exampleInputEmail2">최대화질:</label>
@@ -120,7 +120,7 @@
             <div class="form-group">
                   <label for="exampleInputEmail2">누적 시청자수:</label>
                   <input type="text" class="form-control" id="exampleInputName2" 
-                  style="width: 500px;" value="105명" readonly>
+                  style="width: 500px;" value="${chat.views}" readonly>
             </div>
               <div class="form-group">
                   <label for="exampleInputEmail2">태그설정:</label>
@@ -151,7 +151,7 @@
                <textarea id="chatLog" class="chat_log textarea" readonly ></textarea>
             </div>
             <div class="submit_btn " align="center">
-               <input type="submit" class="btn btn-primary" id="save" value="확인" />
+               <input type="submit" class="btn btn-primary btn-lg" id="save" value="확인"  style="background: #2e9dfe;"/>
             </div>
       </div>
       </form>
@@ -164,7 +164,6 @@
       $(document).ready(function(){
          //데이타요청(채팅방 리스트)aa
 		var num =  $("#roomNum").val();
-         alert(num);
 		var str = "";
          $.ajax({
             type: "post",
@@ -176,7 +175,7 @@
                console.log(logList);
                var endNum = logList.length - 1;
                for(var i=0; i<logList.length; i++){
-                     str += logList[i].email+" : "+logList[i].content+"\n";
+                     str += logList[i].nickname+" : "+logList[i].content+"\n";
                }
                $("#chatLog").val(str);
             },
@@ -191,6 +190,26 @@
       
    
       </script>
- 
+ 	<script>
+ 	var readURL = function(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				$('.thumbnail_img').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+
+			
+
+			}
+		}
+	
+ 	
+ 	$(".thumbnail").on('change', function() {
+		var img = readURL(this);
+	});
+ 	</script>
 </body>
 </html>

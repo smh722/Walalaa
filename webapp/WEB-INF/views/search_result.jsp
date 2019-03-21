@@ -95,41 +95,36 @@
       //$("#liveroom").append(str);   
       console.log("lineStart() 실행");
    }
-   function render2(ChatVO) {
-      //var str = "";
-      stri += "   <div class='boradbox img_scale'>";
-      stri += "      <div class='thumbnail scale'>";
-      stri += "         <a href='#' onclick='moveRoom()'>";
-      stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
-      stri += "         <div class='caption'>";
-      stri += "            <h4>" + ChatVO.name + "</h4>";
-      stri += "            <p> " + ChatVO.usersNickname + "</p>";
-      stri += "            <p> 조회수 5만 4분전</p>";
-      stri += "         </div>";
-      stri += "      </div>";
-      stri += "   </div>";
-
-      console.log("render() 실행");
-
-   }
-   function lineRender2(ChatVO) {
-      //var str = "";
-      stri += "</div>";
-      stri += "<div class='row' style='display: flex; margin-left:0px;'>";
-      stri += "   <div class='boradbox img_scale'>";
-      stri += "      <div class='thumbnail scale'>";
-      stri += "         <a href='#' onclick='moveRoom(" + ChatVO.name + ", "
-            + ChatVO.remaincount + ", " + ChatVO.totalcount + ")'>";
-      stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width:240px; height:140px;'></a>";
-      stri += "         <div class='caption'>";
-      stri += "            <h4>" + ChatVO.name + "</h4>";
-      stri += "            <p> " + ChatVO.usersNickname + "</p>";
-      stri += "            <p> 조회수 5만 4분전</p>";
-      stri += "         </div>";
-      stri += "      </div>";
-      stri += "   </div>";
-
-   }
+   function render2(ChatVO){
+       stri += "   <div class='boradbox img_scale'>";
+       stri += "      <div class='thumbnail scale'>";
+       stri += "         <a href=\"#\" onclick=\"uploadedRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
+       stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
+       stri += "        		 <div class='caption'>";
+       stri += "					<h4>" +ChatVO.name+"</h4>";
+       stri += "           		 <div style='float:left; margin-right:5px; margin-bottom: 2px;'><img src='${pageContext.request.contextPath}"+ChatVO.profile+"' class='img-responsive img-circle' style='width: 20px; height: 20px;'></div>";
+       stri += "           		 <div style='float:left;'>"+ChatVO.usersNickname+"</div>";
+       stri += "        		 </div>";
+       stri += "          <div style='margin-top:15px; padding-left:10px;'>조회수 "+ChatVO.views+"회  · "+ChatVO.uploadtime+"</div>";
+       stri += "      </div>";
+       stri += "   </div>";
+    }   
+    function lineRender2(ChatVO){
+       stri += "</div>";
+       stri += "<div class='row' style='display: flex; margin-left:0px;'>";
+       stri += "   <div class='boradbox img_scale'>";
+       stri += "      <div class='thumbnail scale'>";
+       stri += "         <a href=\"#\" onclick=\"uploadedRoom('"+ChatVO.name+"', "+ChatVO.remaincount+", "+ChatVO.totalcount+", '"+ChatVO.pwd+"')\">";
+       stri += "         <img src='${pageContext.request.contextPath}"+ChatVO.thumbnail+"' class='img-responsive' alt='썸네일 ' style='width: 240px; height: 140px;'></a>";
+       stri += "        		 <div class='caption'>";
+       stri += "					<h4>" +ChatVO.name+"</h4>";
+       stri += "           		 <div style='float:left; margin-right:5px; margin-bottom: 2px;'><img src='${pageContext.request.contextPath}"+ChatVO.profile+"' class='img-responsive img-circle' style='width: 20px; height: 20px;'></div>";
+       stri += "           		 <div style='float:left;'>"+ChatVO.usersNickname+"</div>";
+       stri += "        		 </div>";
+       stri += "          <div style='margin-top:15px; padding-left:10px;'>조회수 "+ChatVO.views+"회  · "+ChatVO.uploadtime+"</div>";
+       stri += "      </div>";
+       stri += "   </div>";
+    }   
    function lineEnd2() {
       //var str = "";
 

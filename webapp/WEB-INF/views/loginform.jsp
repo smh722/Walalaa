@@ -13,6 +13,11 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
 
 	<style>
+	@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+		
+/* 		body{ */
+/* 			font-family: 'Jeju Gothic', sans-serif; */
+/* 		} */
 		.loginformlist {
 			font-family: serif;
 		}
@@ -70,7 +75,6 @@ function checkPassword () {
          data: email,
          success: function (data) {
             if(data == password) {
-               alert("★ 로그인 완료 ★");
                $("#loginform").submit();
             } else {
                alert("비밀번호가 일치하지 않습니다");
@@ -104,7 +108,7 @@ function checkPassword () {
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="password" class="control-label loginformlist">비밀번호:</label>
+					<label for="password" class="control-label">비밀번호:</label>
 					<input style="width: 280px;" type="password"
 						class="form-control loginformlist" id="password" name='password'>
 				</div>
@@ -113,10 +117,8 @@ function checkPassword () {
 					<a href="joinform.do">회원가입 /</a> <a href="findpasswordform.do">비밀번호찾기</a>
 				</div>
 				<div class="form-group" align="center">
-
-					<!--                <button type="submit" class="btn btn-primary">로그인</button> -->
-					<button type="submit" class="btn btn-primary"
-						onclick="checkPassword();">로그인</button>
+					<button type="submit" class="btn btn-primary btn-lg"
+						onclick="checkPassword();"  style="background: #2e9dfe;">로그인</button>
 				</div>
 			</form>
 		</div>

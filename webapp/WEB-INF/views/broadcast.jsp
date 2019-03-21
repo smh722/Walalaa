@@ -12,7 +12,7 @@
 
 
 <!-- 구글폰트 -->
-<!-- <link href="https://fonts.googleapis.com/css?family=Hi+Melody" rel="stylesheet"> -->
+<link href="https://fonts.googleapis.com/css?family=Hi+Melody" rel="stylesheet">
 
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
 <script type="text/javascript"
@@ -72,7 +72,7 @@ h4, h5 {
 .chat_log {
    height: 100%;
    /*          width: 100.7%; */
-   width: 98%;
+   width: 99%;
    margin-left: 5px;
    resize: none;
    text-align: left;
@@ -81,6 +81,10 @@ h4, h5 {
    border: 1px solid #2e9dfe;
    border-radius: 10px 10px 0 0;
    font-size: 18px;
+   word-break: break-all;
+}
+.chat_log > div{
+	width: 90%;
 }
 
 /* 메세지 입력란 */
@@ -107,9 +111,7 @@ h4, h5 {
    border-radius: 0 0 10px 0;
    font-size: 20px;
    /*    부트스트랩 기본색 #337ab7  밝은파란색 2e9dfe*/
-   background:
-      url(${pageContext.request.contextPath}/assets/images/send_icon.png)
-      center no-repeat #2e9dfe;
+   background: #2e9dfe;
    color: #fff;
    vertical-align: bottom;
 }
@@ -154,8 +156,8 @@ h4, h5 {
 #brFinish_btn:hover{
     border: none;
     float: right;
-	height: 35px;
-	background: url(${pageContext.request.contextPath}/assets/images/broadcast_finish_hover2.png) center no-repeat;
+   height: 35px;
+   background: url(${pageContext.request.contextPath}/assets/images/broadcast_finish_hover2.png) center no-repeat;
 }
 
 
@@ -238,7 +240,12 @@ input.chat {
 }
 
 #warnCnt{
-	border: none;
+   border: none;
+}
+#chatLog{
+	overflow: scroll;
+	overflow-x: hidden;
+	
 }
 </style>
 
@@ -261,7 +268,6 @@ button::after {
    };
 
    function manage(roomNum) {
-     console.log($("[name='roomNum']").val());
      //num = document.getElementById('roomNum').value;
       //window.open("about:blank").location.href = "manage.do";
       $("#manageform").submit();
@@ -271,10 +277,10 @@ button::after {
 </script>
 
 <script type="text/javascript">
-   var chatingtxt = new Array();
    var i = 0;
    var sock = null;
    var id = '${login.email}';
+  
    $(document).ready(
          function() {
             $("#message").focus(); // 처음 접속시, 메세지 입력창에 focus 시킴
@@ -301,11 +307,9 @@ button::after {
                   //전체에게 보낼때
                   if (msg != "") {
                   //소켓으로 메세지 전달
-                  ws.send(msg + "!%/" + ""+ "!%/" + room);
-                  chatingtxt.push(msg);
+                  ws.send(msg + "!%/" + "time"+ "!%/" + room);
                   $("#message").val(""); //입력창 내용지우기
                   $("#message").focus(); //입력창 포커스 획득
-                  console.log(chatingtxt);
                   }
                });
             
@@ -319,11 +323,10 @@ button::after {
                      //전체에게 보낼때
                      if (msg != "") {
                         //소켓으로 메세지 전달
-                        ws.send(msg + "!%/"+ "" + "!%/"+ room);
-                        chatingtxt.push(msg);
+                        console.log(msg);
+                        ws.send(msg + "!%/"+ "time" + "!%/"+ room);
                         $("#message").val(""); //입력창 내용지우기
                         $("#message").focus(); //입력창 포커스 획득
-                        console.log(chatingtxt);
                      }
                   }
                });
@@ -333,33 +336,121 @@ button::after {
                   var room = $("#room").val(); //방이름(전체단톡방이면 all)
                   ws.send(room);
                });
+               //구독하기 버튼을 눌렀을때
+              $("#doSubscribe").on("click", function(){
+                var room = $("#room").val();
+               var id = "";
+                 id = $("#userId").val();
+               $.ajax({
+                     type : "post",
+                     url : "subScribe.do",
+                     data : id,
+                     success : function(){
+                        ws.send(room+"%!#Sub");
+                            document.getElementById("doSubscribe").style.display="none";
+                         	document.getElementById("subscribe").style.display="";
+                     },
+                      error : function(XHR, status, error) {
+                         console.error(status + " : " + error);
+                      }     
+                   });
+           });
+               //구독해제 버튼을 눌렀을때
+           
+           
+               
+               
+               
+               
+               
+               
+               
             };
             
             //서버로 부터 받은 메세지 보내주기
             ws.onmessage = function(message) {
-               var jsonData = JSON.parse(message.data);
-               var msg = jsonData.message;
+                var jsonData = JSON.parse(message.data);
+                var msg = jsonData.message;
+                var ownerCheck =false;
+               var viewernick = $("#usernick").val();;
+                //프로필 가져오기 작업
+                var chatprofile="";
+                if(msg.includes("[")){
+		            var str = msg.split("]");
+		            str = str[0].split("[");
+		            var usernick = str[1];
+                
+            $.ajax({
+                type : "post",
+                url : "getprofile.do",
+                data : {usernick : usernick},
+                async: false,
+                success : function(url){
+                      chatprofile=url;
+                },
+                error : function(XHR, status, error) {
+                    console.error(status + " : " + error);
+                }     
+            });
+            
+             $.ajax({
+                     type : "post",
+                     url : "${pageContext.request.contextPath}/ownerChecknick.do",
+                     data : {usernick : usernick},
+                     async: false,
+                     success : function(check){
+                     ownerCheck = check;
+                     },
+                      error : function(XHR, status, error) {
+                          console.error(status + " : " + error);
+                      }     
+                   });
+                }
                if (jsonData.message != null) {
-               if(msg.includes("B%A%D")){
+               if (msg.includes("B%A%D")){
                   msg = msg.replaceAll("&/%!", ":");
-                  msg = msg.replaceAll("B%A%D", "/");
+                  msg = msg.replaceAll("B%A%D", "");
+                 
+            
                   console.log(msg);
-                  window.open("sendobj.do?msg="+msg,",이의제기하기","toolbar = 0, scrollbars = 1, statusbar = 0, menubar = 0, resizable = 0, width=450px, height=300px, left= 1000, top= 200");
+                  window.open("sendobj.do?msg="+msg,"이의제기하기","toolbar = 0, scrollbars = 1, statusbar = 0, menubar = 0, resizable = 0, width=450px, height=235px, left= 1000, top= 200");
                }else if(msg.includes("broadcast&end")){
-            	   alert("방송이 종료되었습니다.");
-            	   loction.href="main.do";
+                  loction.href="main.do";
                }else{
                         //메세지 
                         if(msg.includes("#^$userbad")){
-	                        alert("사용자가 이 채팅을 싫어합니다. 하지마세요");
-	                        $("#chatLog").append("<b style='color: orange; font-size: 30px;'>"+msg.substring(10)+"<b>"+"<br>");
-	                        $("#chatLog").scrollTop(99999999);
+                           alert("사용자가 이 채팅을 싫어합니다. 하지마세요");
+                           msg = msg.replace("[", "");
+                             msg = msg.replace("]", "");
+                           $("#chatLog").append("<div style='display: flex; '><img src='${pageContext.request.contextPath}"+chatprofile+"' class='img-responsive img-circle' style='width: 22px; height: 22px; margin-right: 3px;'><div><b style='color: orange;'>"+msg.substring(10)+"<b></div>");
+                           $("#chatLog").scrollTop(99999999);
                         }else if (msg.includes("#^$bad")) {
                          alert("비속어감지");
-                         $("#chatLog").append("<b style='color: red; font-size: 30px;'>"+msg.substring(6)+"<b>"+"<br>");
+                         msg = msg.replace("[", "");
+                         msg = msg.replace("]", "");
+                         $("#chatLog").append("<div style='display: flex; '><img src='${pageContext.request.contextPath}"+chatprofile+"' class='img-responsive img-circle' style='width: 22px; height: 22px;margin-right: 3px;'><div><b style='color: red;'>"+msg.substring(6)+"<b></div>");
                          $("#chatLog").scrollTop(99999999);
+                      }else if(msg.includes("do%!#Sub")){
+                         var subScribe = msg.split("do%!#");
+                         $("#subNick").empty();
+                         $("#subNick").append(subScribe[0]+ "님이 구독!");
+                         subscribe_img.style.display="";
+                         setTimeout("hideDiv()", 3000);
+                         
                       }else{
-                         $("#chatLog").append(jsonData.message + "<br>");
+                         msg = msg.replace("[", "");
+                          msg = msg.replace("]", "");
+                          if(ownerCheck){
+                             msg = msg.replaceAll("color: gray;", "color: gray; background-color: #FFC000;");
+                             $("#chatLog").append("<div style='display: flex; '><img src='${pageContext.request.contextPath}"+chatprofile+"' class='img-responsive img-circle' style='width: 22px; height: 22px;margin-right: 3px;'><div>"+msg + "</div></div>");
+                          }else{
+                             if(usernick==viewernick){
+                               $("#chatLog").append("<div style='display: flex; font-style: italic; '><img src='${pageContext.request.contextPath}"+chatprofile+"' class='img-responsive img-circle' style='width: 22px; height: 22px;margin-right: 3px;'><div>"+msg + "</div></div>");
+                             }else{
+                               $("#chatLog").append("<div style='display: flex; '><img src='${pageContext.request.contextPath}"+chatprofile+"' class='img-responsive img-circle' style='width: 22px; height: 22px;margin-right: 3px;'><div>"+msg + "</div></div>");
+                             }
+                          }
+                             
                          $("#chatLog").scrollTop(99999999);
                       }
                   }
@@ -372,43 +463,62 @@ button::after {
             //경고횟수
             
    });
+   
+   
 </script>
-	<script>
-		 $(document).ready(
-	         function() {
-	                 var id = "";
-	                 id = $("#userId").val();
-	                       $.ajax({
-	                            type : "post",
-	                            url : "${pageContext.request.contextPath}/ownerCheck.do",
-	                            data : id,
-	                            success : function(check){
-	        	                    if(check){
-	        	                    }else{
-	        	                    	var settingBtn = document.getElementById('a_broadcast_setting');
-	        	                    	var manageBtn = document.getElementById('manageBtn');
-	        	                    	var brFinishBtn = document.getElementById('brFinish_btn');
-										settingBtn.style.display = 'none';
-										manageBtn.style.display = 'none';
-										brFinishBtn.style.display = 'none';
-	        	                    	
-	        	                    	
-	        	                    }
-	                            },
-	                             error : function(XHR, status, error) {
-	                                 console.error(status + " : " + error);
-	                             }     
-	                          });
-	         });
-	</script>
-	
-
+   <script>
+       $(document).ready(
+            function() {
+                    var id = "";
+                    id = $("#userId").val();
+                          $.ajax({
+                               type : "post",
+                               url : "${pageContext.request.contextPath}/ownerCheck.do",
+                               data : id,
+                               success : function(check){
+                                  if(check){
+                                  }else{
+                                     var settingBtn = document.getElementById('a_broadcast_setting');
+                                     var manageBtn = document.getElementById('manageBtn');
+                                     var brFinishBtn = document.getElementById('brFinish_btn');
+                              settingBtn.style.display = 'none';
+                              manageBtn.style.display = 'none';
+                              brFinishBtn.style.display = 'none';
+                                  }
+                               },
+                                error : function(XHR, status, error) {
+                                    console.error(status + " : " + error);
+                                }     
+                             });
+            });
+   </script>
+   
+   <script>
+      // 방송 시작시 사용자 지정단어 0으로 설정
+      $(document).ready(function() {
+           var id = "";
+           id = $("#userId").val();
+           $.ajax({
+                type : "post",
+                url : "${pageContext.request.contextPath}/settingcustomword.do",
+                data : id,
+                success : function(){
+                },
+                error : function(XHR, status, error) {
+                     console.error(status + " : " + error);
+                }     
+              });
+        });
+   
+   </script>
+   
 </head>
 <body>
    <% UserVO login = (UserVO) session.getAttribute("login"); %>
    
    <!-- 세팅 부분 init -->
    <input type="hidden" id="userId" value="${login.email}">
+   <input type="hidden" id="usernick" value="${login.nickname}">
    <!-- 유저아이디  -->
    <input type="hidden" id="room" value="${room}">
    <!-- 현재 유저가 접속한 방이름 -->
@@ -436,8 +546,6 @@ button::after {
                   </h4> <a id="a_broadcast_setting" href="broadcast_setting.do">&nbsp;·&nbsp;방송설정</a>
                
 <!-- 방송종료버튼 --><input type="button" id="brFinish_btn" value='          ' onclick="finish('${roomNum}');">
-<%--                      <img src="${pageContext.request.contextPath}/assets/images/broadcast_finish1.png" height="40px"> --%>
-
                </td>
                <td colspan="3" class="chatting_box_title">
                   <h4>&nbsp;실시간 채팅</h4>
@@ -450,29 +558,35 @@ button::after {
             </tr>
             <tr>
                <td rowspan="3" id="broadScreen">
-                  <div class="video-container">
-                     <div id="subscribe_img" style="position: relative; z-index: 2; float: left; top: 0px; display: none;">
-                        <img src="${pageContext.request.contextPath}/assets/images/heart_moving2.gif" alt="구독 감사"> 
-                        <font color="white" size="5px" style="position: relative; z-index: 3; float: left; top: 55px; left: 20px;">
-                           <strong>${login.nickname }님이 구독!</strong>
-                        </font>
+                  <div class="video-container" >
+                     <div id="subscribe_img" style="position: relative; z-index: 2; float: left; display: none; margin-left: 3px; width:20%; ">
+                     	<div style="width: 100%; ">
+                     		<img src="${pageContext.request.contextPath}/assets/images/heart_moving2.gif" alt="구독 감사" style="width: 100%; "> 
+<%--                        <img src="${pageContext.request.contextPath}/assets/images/subscribeThx.png" alt="구독 감사">  --%>
+                     	</div>
+						<div style="width: 90%; position: absolute; text-align: center; top: 50%; padding-left: 10px; z-index: 3; transform: translate( 5%, -50% ); " >
+							<font color="white" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 3vw; ">
+<!-- 							style="float: left; top: 55px; left: 20px;" -->
+                           		<strong id="subNick"></strong>
+                        	</font>
+						</div>
                      </div>
                      <!--  자동재생소스추가하려면   ?rel=0&autoplay=1 -->
-                     <iframe height="100%" width="100%" src="https://www.youtube.com/embed/CB6gwOJp_8U?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
+                     <iframe height="100%" width="100%" src="https://www.youtube.com/embed/IsEVv1Jt2Ro" frameborder="0" allowfullscreen></iframe>
                   </div>
                </td>
                <td colspan="2" id="chatScreen">
-                  <div id="chatLog" class="chat_log" style="overflow:auto;"></div>
+                  <div id="chatLog" class="chat_log" style="overflow-x:hidden; resize: none;"></div>
                </td>
             </tr>
             <tr>
                <td class="col-xs-1w" colspan="3">
-                  <input id="name" class="name" type="hidden" readonly> 
-                  <img class="name" alt="유저이미지" width="28px" height="28px" src="${pageContext.request.contextPath}/assets/images/logo_profile.png">
+                  <input id="name" class="name" type="hidden" readonly>
+                 <img src="${pageContext.request.contextPath}${login.profile}" class="name img-circle" alt="유저이미지" width="30px" height="30px" >
                   <strong>${login.nickname }</strong> · 
                   <font color="red" size="2">
                      <input type='button' id='objbtn' value='                       '>
-                     <input type='text' id='warnCnt' value=''>
+                     <input type='text' id='warnCnt' value='' style="width:100%; ">
                   </font>
                </td>
             </tr>
@@ -489,44 +603,58 @@ button::after {
    </div>
    
 
-  
    <script>
       function finish(roomNum) {
-         console.log($("[name='roomNum']").val());
          $("#finishform").submit();
       }
       
    </script>
    <script>
-		 $(document).ready(
-	         function() {
-	                 var id = "";
-	                 id = $("#userId").val();
-	                       $.ajax({
-	                            type : "post",
-	                            url : "${pageContext.request.contextPath}/subScribecheck.do",
-	                            data : id,
-	                            success : function(check){
-	                            	alert("check :" + check);
-	        	                    	var doSubscribeBtn = document.getElementById('doSubscribe');
-	        	                    	var delSubscribeBtn = document.getElementById('subscribe');
-	        	                    if(check){
-	        	                    	doSubscribeBtn.style.display = "none";
-	        	                    	delSubscribeBtn.style.display = "";
-	        	                    	
-	        	                    }else{
-	        	                    	doSubscribeBtn.style.display = "";
-	        	                    	delSubscribeBtn.style.display = "none";
-	        	                    	
-	        	                    	
-	        	                    }
-	                            },
-	                             error : function(XHR, status, error) {
-	                                 console.error(status + " : " + error);
-	                             }     
-	                          });
-	         });
-	</script>
+       $(document).ready(
+            function() {
+                 var id = "";
+                 id = $("#userId").val();
+                 
+            
+                  $.ajax({
+                       type : "post",
+                       url : "${pageContext.request.contextPath}/subScribecheck.do",
+                       data : id,
+                       success : function(check){
+                             var doSubscribeBtn = document.getElementById('doSubscribe');
+                             var delSubscribeBtn = document.getElementById('subscribe');
+                          if(check){
+                             doSubscribeBtn.style.display = "none";
+                             delSubscribeBtn.style.display = "";
+                          }else{
+                             doSubscribeBtn.style.display = "";
+                             delSubscribeBtn.style.display = "none";
+                          }
+                       },
+                        error : function(XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }     
+                     });
+                  
+                
+  /*              
+                 // 유저 프로필 이미지 가져오기
+                  $.ajax({
+                     url : "getProfileImage.do",   //    안될때 ${pageContext.request.contextPath}/
+                     type : "post",
+                     data : { email : id },
+                     contentType: "application/json; charset=utf8",
+                     dataType : "json",
+                     success : function(profileImage){
+                        alert(profileImage);
+                     },
+                     error : function(XHR, status, error) {
+                        console.error(status + " : " + error);
+                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                  });
+  */
+            });
+   </script>
    <script>   
       
    $(function() {
@@ -539,15 +667,20 @@ button::after {
                     async: true,
                     data : id,
                     success : function(warnCnt){
-	                    if(warnCnt[0]>=warnCnt[1]){
-	                       $("#warnCnt").val("경고" + warnCnt[0] + "회 로 인해 채팅금지상태입니단");
-	                       $('#message').attr('readonly',true);
-	                       $('#message').attr('style','background-color:gray;'); 
-	                    }else{
-	                       $("#warnCnt").val("경고" + warnCnt[0] + "회");
-	                       $('#message').attr('readonly',false);
-	                       $('#message').attr('style','background-color:none;'); 
-	                    }
+                    	if(warnCnt[2] > 0) {
+                    		$("#warnCnt").val("사용자의 요청으로 채팅금지 상태입니다");
+                            $('#message').attr('readonly',true);
+                            $('#message').attr('style','background-color:gray;'); 
+                    	}
+                    	else if(warnCnt[0]>=warnCnt[1]){
+                          $("#warnCnt").val("경고" + warnCnt[0] + "회 로 인해 채팅금지상태입니다");
+                          $('#message').attr('readonly',true);
+                          $('#message').attr('style','background-color:gray;'); 
+                       }else{
+                          $("#warnCnt").val("경고" + warnCnt[0] + "회");
+                          $('#message').attr('readonly',false);
+                          $('#message').attr('style','background-color:none;'); 
+                       }
                     },
                      error : function(XHR, status, error) {
 //                         console.error(status + " : " + error);
@@ -567,8 +700,8 @@ button::after {
                     url : "${pageContext.request.contextPath}/getremainCnt.do",
                     data : {num: num},
                     success : function(Rcount){
-                    	$("#rmCnt").empty();
-						$("#rmCnt").append(Rcount);
+                       $("#rmCnt").empty();
+                  $("#rmCnt").append(Rcount);
                     
                     },
                      error : function(XHR, status, error) {
@@ -580,46 +713,51 @@ button::after {
 
 </script>
 <script>
-	$("#doSubscribe").on("click", function(){
-		
-		document.getElementById("subscribe_img").style.display = "";
-		setTimeout("hideDiv()", 3000);
-		 var id = "";
-         id = $("#userId").val();
-		 $.ajax({
-             type : "post",
-             url : "subScribe.do",
-             data : id,
-             success : function(){
-                 document.getElementById("doSubscribe").style.display="none";
-                 document.getElementById("subscribe").style.display="";
-             },
-              error : function(XHR, status, error) {
-                 console.error(status + " : " + error);
-              }     
-           });
-	});
-	$("#subscribe").on("click", function(){
-		
-		 var id = "";
-         id = $("#userId").val();
-		 $.ajax({
-             type : "post",
-             url : "delsubScribe.do",
-             data : id,
-             success : function(){
-                 document.getElementById("doSubscribe").style.display="";
-                 document.getElementById("subscribe").style.display="none";
-             },
-              error : function(XHR, status, error) {
-                 console.error(status + " : " + error);
-              }     
-           });
-	});
-	
-	function hideDiv() {
-		document.getElementById("subscribe_img").style.display = "none";
-		}
+   $("#subscribe").on("click", function(){
+      
+       var id = "";
+       id = $("#userId").val();
+       $.ajax({
+           type : "post",
+           url : "delsubScribe.do",
+           data : id,
+           success : function(){
+               document.getElementById("doSubscribe").style.display="";
+               document.getElementById("subscribe").style.display="none";
+           },
+            error : function(XHR, status, error) {
+               console.error(status + " : " + error);
+            }     
+         });
+   });
+   function hideDiv() {
+      document.getElementById("subscribe_img").style.display = "none";
+      }
+</script>
+<script>
+$(document).keydown(function (e) {
+    // F5, ctrl + F5, ctrl + r 새로고침 막기
+    var allowPageList   = new Array('/a.php', '/b.php');
+    var bBlockF5Key     = true;
+    for (number in allowPageList) {
+        var regExp = new RegExp('^' + allowPageList[number] + '.*', 'i');
+        if (regExp.test(document.location.pathname)) {
+            bBlockF5Key = false;
+            break;
+        }
+    }
+     
+    if (bBlockF5Key) {
+        if (e.which === 116) {
+            if (typeof event == "object") {
+                event.keyCode = 0;
+            }
+            return false;
+        } else if (e.which === 82 && e.ctrlKey) {
+            return false;
+        }
+    }
+});
 </script>
 </body>
 </html>

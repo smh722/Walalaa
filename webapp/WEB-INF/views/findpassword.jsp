@@ -48,13 +48,26 @@
                <a href="loginform.do">로그인페이지</a>      
             </div>
             <div class="form-group" align="center">   
-               <button style= "margin-top: 5px;" type="submit" class="btn btn-primary">비밀번호찾기</button>
+               <button style= "margin-top: 5px;" id="findpw_btn"type="button" class="btn btn-primary">비밀번호찾기</button>
                
             </div>   
          </form>
       </div>
    </div>
+   <script>
+   	$("#findpw_btn").on("click", function(){
+   		var email = $("#inputEmail").val();
+   		$.ajax({
+            type: "post",
+            url: "${pageContext.request.contextPath}/findpw.do",
+            data : {email:email},
+            success : function(data) {
+            	alert(email + "의 비밀번호는 : " + data + "입니다.");
+            }
+         });
+      });
    
+   </script>
    
 </body>
 </html>

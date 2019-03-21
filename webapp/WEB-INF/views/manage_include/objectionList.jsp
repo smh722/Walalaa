@@ -70,7 +70,6 @@
       
       $(document).ready(function() {
          var num =  $("#roomNum").val();
-         alert(num);
          
          var timer = window.setInterval( function () {
         	 if(!timerPaused){
@@ -91,13 +90,14 @@
 	                  $("#objshow").append(str);
 	                  
 	                  
+	                  
 	               },
 	                  error : function(XHR, status, error) {
 	                      console.error(status + " : " + error);
 	                  }                   
 	            });
         	 }
-         }, 2000);   //5초에 한번
+         }, 1000);   //5초에 한번
          
          function start() {
             str += "<table class=\"no_border_table\">";
@@ -114,14 +114,14 @@
          function showObjList(ObjectionVO) {
             str += "<tr class=\"ob_list\">";
             str += "    <td class=\"dropdown padding_td\">";
-            str += "        <button class=\"btn dropdown-toggle btn_color btn-group pause\" type=\"button\" onclick='pause()' data-toggle=\"dropdown\">";
+            str += "        <button class=\"btn dropdown-toggle btn_color btn-group pause\" type=\"button\" data-toggle=\"dropdown\">";
             str += "            "+ ObjectionVO.usersNickname;
             str += "            <span class=\"caret\"></span></button>";
             str += "            <ul class=\"dropdown-menu\">";
-            str += "                <li><a href=\"#\" onclick='play()'>채팅금지</a></li>";
-            str += "                <li><a href=\"#\" onclick='play()'>추방하기</a></li>";
-            str += "                <li><a href=\"#\" onclick='play()'>신고하기</a></li>";
-            str += "                <li><a href=\"#\" onclick='play()'>블랙리스트 등록</a></li>";
+            str += "                <li><a href=\"#\" class='doNochat' data-email='"+ObjectionVO.id+"'>채팅금지</a></li>";
+            str += "                <li><a href=\"#\" data-email='"+ObjectionVO.id+"'>추방하기</a></li>";
+            str += "                <li><a href=\"#\" data-email='"+ObjectionVO.id+"'>신고하기</a></li>";
+            str += "                <li><a href=\"#\" class='addblacklist' data-value='black' data-email='"+ObjectionVO.id+"'>블랙리스트 등록</a></li>";
             str += "            </ul>";
             str += "    </td>";
             str += "    <td>" + ObjectionVO.content + "</td>";
@@ -146,7 +146,8 @@
                str += "        </button>";
             }
             str += "    </td>";
-            str += "    <td> " + ObjectionVO.chatmemChatstatus + "</td>";
+            var status = ObjectionVO.chatmemChatstatus.substr(0,6);
+            str += "    <td> " + status + "</td>";
             str += "    <td> " + ObjectionVO.time +" </td>";
             str += "</tr>";
          }
@@ -236,13 +237,56 @@
                   
     </script>
 	<script>
-	   	function pause(){
-	   		timerPaused = true;
-	   	}
-	   	function play(){
-	   		timerPaused = false;
-	   	}
+	var ajaxstatus = 0;
+	    $("#objshow").on('click', '.pause', function() {   
+	    	timerPaused = true;
+	    	setTimeout(function(){
+				ajaxstatus = 1;
+	    	}, 1000);
+	      });
+	   	
+	   	$("#objshow").on('click', function(){
+	   		if(ajaxstatus==1){
+	   			timerPaused = false;
+	   			ajaxstatus =0;
+	   		}
+	   	});
+	 </script>
+	 <script>   
+	   	$("#objshow").on('click', '.doNochat', function() {
+	         var $this = $(this);
+	         var email = $this.data("email");
+	         
+	         $.ajax({
+	            type: "post",
+	            url: "${pageContext.request.contextPath}/Nochat.do",
+	            data : {email:email},
+	            success : function() {
+	            	alert("채팅금지되었습니다.");
+	            }
+	         });
+	      });
 	</script>
+	   <script>
+   
+      $(document).on('click', '.addblacklist', function() {   
+         var $this = $(this);
+         var email = $this.data("email");
+         var value = $this.data("value");
+         var num = ${roomNum};
+         
+         
+         $.ajax({
+            type: "post",
+            url: "${pageContext.request.contextPath}/listupdate.do",
+            data : {email:email, value:value, num : num},
+            success : function() {
+            }
+         });
+      });
+   
+   
+   </script>
     </body>
     
 

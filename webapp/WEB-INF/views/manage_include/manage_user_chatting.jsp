@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -12,106 +12,180 @@
 
 <!-- 부트스트랩 -->
 <link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery-1.12.4.js"></script>
-<!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
-<script src="js/bootstrap.min.js"></script>
 
-	<style>
-	table.user_chatting {
-		border-collapse: collapse;
-	    margin: 5px;
-	    width: 99%;
-	    font-size: 17px;
-	}
-	
-	tbody {
-		border: solid 2px lightgray;
-	}
-	tbody>tr{
-		height: 32px;
-		border: lightgray 1px dotted;
-	}
-	tbody>td{
-		padding-top: 5px;
-	}
+<style>
+   @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+   
+   body {
+	padding: 0px;
+	margin: 0px;
+	font-family: 'Jeju Gothic';
+	font-size: 16px;
+   }
+   
+   .pageset {
+      width: 900px;
+      margin: 0 auto;
+   }
+   
+   .bigFont {
+      color: #2e9dfe;
+      font-size: 20px;
+      margin-bottom: 5px;
+   }
+   
+   #topchat{
+   		margin-top: 5px;
+   		text-align: center;
+   }
+   
+   .msginput {
+      background-color: white;
+   /*    border-bottom-color: #2e9dfe; */
+      border: none; 
+   }
+   
+   .msginput:hover {
+      background-color: #c5f0f7;
+      font-style: oblique;
+      border: none; 
+   }
+   
+   .btnstyle {
+      background-color: #2e9dfe;
+   }
+   
+   .time{
+   		color: gray;
+   }
+   
+</style>
 
-	.pageset{
-		width: 1080px;
-		margin:0 auto;
-	}
-	.sysdate{
-		text-align: right;
-	}
+<script type="text/javascript">
+   var userchats = "${userchat}";
 
-	</style>
-	<script type="text/javascript">
-		function btn_js_report_click() {
-			/* confirm(문자열, 초기값) */
-			var check = confirm("정말로 신고하시겠습니까?\n허위 신고시 제재를 받을 수 있습니다");
-			/* if(check == true) else false */
-			if (check)
-				alert("신고되었습니다");
-		}
-		function btn_js_delete_click() {
-			/* confirm(문자열, 초기값) */
-			var check = confirm("정말로 삭제하시겠습니까?");
-			/* if(check == true) else false */
-			if (check)
-				alert("삭제되었습니다");
-		}
-	</script>
+   userchats = userchats.substr(1);   // 글자를 감싸고 있는 [ 빼기
+   userchats = userchats.substr(0, userchats.length-1); // 글자를 감싸고 있는 ] 빼기
+   var userchat = userchats.split(", ");   // 각각의 채팅 끊기
+   
+   var str = "";
+   var str_user = "";
+   var id = "";
+   
+   var num=0; // label과 체크박스 같이 누르게 할 변수
+   
+
+   $(document).ready(function() {
+      
+      for(var i=0; i<userchat.length; i++){
+         var msg = userchat[i].split("&/%!");
+            
+         id = msg[0];
+         if(msg.length ==3){
+        	 
+         showChat(msg[1], msg[2], msg[0]);   // 채팅내용, 시간, 유저이메일
+         }else{
+        	 showChat(msg[1], msg[3], msg[0]);   // 채팅내용, 시간, 유저이메일
+         }
+      }
+      
+      $.ajax({
+         url: "${pageContext.request.contextPath}/getUserInfo.do",
+           type: "post",
+           data : {id : id},
+         success: function(userVO){
+           showUser(userVO.nickname, id, userVO.profile);   
+           $("#showUserInfo").append(str_user);
+        } , 
+        error : function(XHR, status, error) {
+              console.error(status + " : " + error);
+          } 
+      });
+      
+      
+      $("#showUserChat").append(str);
+   });
+
+   function showUser(nickname, email, profile) {
+     str_user += " <div style='border-bottom: solid 1px lightgray; padding-bottom: 5px; padding-top: 5px;' >";
+     if(profile==null){
+     	str_user += "    <img src='${pageContext.request.contextPath}/assets/images/userProfile_basic.png'  class='img-circle' style='width: 35px; height: 35px;'> " + nickname + "님의 채팅 모아보기 ";
+     }else{
+    	 str_user += "    <img src='${pageContext.request.contextPath}"+profile+"' class='img-circle' style='width: 35px; height: 35px;'> " + nickname + "님의 채팅 모아보기 ";
+     }
+     str_user += "    <button class='doNochat btn' data-email='"+email+"' style='float: right;'>채팅금지</button>";
+     str_user += " </div>";
+   }
+   
+   function showChat(msg, time, email) {
+     var hour = time.substr(8,2)+":";
+     var min = time.substr(10,2)+":";
+     var sec = time.substr(12,2);
+     
+      str += "<div style='display:flex; font-size: 17px; padding-left:15px; padding-right:0px; padding-top: 7px'  >";
+      str += "    <div style='width: 800px; height: 30px; ' >";
+      str += "       <label for ='list"+num+"' class='msginput' style='width: 700px; height: 30px; cursor:pointer'>"+msg+"</label>";
+      str += "       <input id ='list"+num+"' type='checkbox' name='chatselect' style='width: 30px; ' value="+email+" >";
+      str += "    </div>";
+      str += "    <div class='time'>";
+      str += "    " + hour+min+sec;
+      str += "    </div>";
+      str += "</div>";
+      num++;
+   }
+</script>
+
+<script type="text/javascript">
+   function btn_js_report_click() {
+      /* confirm(문자열, 초기값) */
+      var check = confirm("정말로 신고하시겠습니까?\n허위 신고시 제재를 받을 수 있습니다");
+      /* if(check == true) else false */
+      if (check)
+         alert("신고되었습니다");
+   }
+   function btn_js_delete_click() {
+      /* confirm(문자열, 초기값) */
+      var check = confirm("정말로 삭제하시겠습니까?");
+      /* if(check == true) else false */
+      if (check)
+         alert("삭제되었습니다");
+   }
+</script>
+
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/search_navbar.jsp"></jsp:include>
-	
-	
-	<div class="pageset">
-		<table class="user_chatting">
-			<thead>
-				<tr>
-					<th colspan="2" class="col-xs-9">
-					<img src="${pageContext.request.contextPath}/assets/images/user.png">시청자13
-					님의 채팅 모아보기</th>
-					<th class="col-xs-1" align="right"><button>채팅금지</button></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="col-xs-1"><input type="checkbox"></td>
-					<td >ㅅㅂ 개못하는데 이런방송 왜봄?</td>
-					<td class="col-xs-1 sysdate" align="right">16:32:01</td>
-				</tr>
-				<tr>
-					<td class="col-xs-1"><input type="checkbox"></td>
-					<td >ㅅㅂ 개못하는데 이런방송 왜봄?</td>
-					<td class="col-xs-1 sysdate" align="right">16:32:01</td>
-				</tr>
-				<tr>
-					<td class="col-xs-1"><input type="checkbox"></td>
-					<td >ㅅㅂ 개못하는데 이런방송 왜봄?</td>
-					<td class="col-xs-1 sysdate" align="right">16:32:01</td>
-				</tr>
-				<tr>
-					<td class="col-xs-1" ><input type="checkbox"></td>
-					<td >ㅅㅂ 개못하는데 이런방송 왜봄?</td>
-					<td class="col-xs-1 sysdate" align="right">16:32:01</td>
-				</tr>
-			</tbody>
-			<tfoot>
-				<tr>
+   <%--    <jsp:include page="/WEB-INF/views/search_navbar.jsp"></jsp:include> --%>
 
-					<td colspan="3">
-						<input type="button" value="신고" name="btn_js_report" id="btn_js_report" onclick="btn_js_report_click();">
-						<input type="button" value="삭제" name="btn_js_delete" id="btn_js_delete" onclick="btn_js_delete_click();">
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-		<a href="manage.do">관리자창으로 돌아가기</a>
 
-	</div>
+   <div class="pageset">
+      <div id="topchat"><b class="bigFont"> 사용자 채팅 모아보기 </b></div>
+      <div id="showUserInfo"></div>
+      
+      <div id="showUserChat"></div>
 
+      <div style="margin-top: 5px; margin-right: 10px; border-top: solid 1px lightgray">
+         <input class="btn btn-primary btn-lg btnstyle" type="button" value="신고" name="btn_js_report" id="btn_js_report" onclick="btn_js_report_click();" style="float: right; margin-top: 5px;"> 
+      </div>
+   </div>
+
+
+   <script>
+   $("#showUserInfo").on('click', '.doNochat', function(){
+      var $this = $(this);
+        var email = $this.data("email");
+        
+        $.ajax({
+           type: "post",
+           url: "${pageContext.request.contextPath}/Nochat.do",
+           data : {email:email},
+           success : function() {
+              alert("사용자의 채팅이 금지되었습니다.");
+           }
+        });
+   });
+   </script>
+   
 </body>
 </html>

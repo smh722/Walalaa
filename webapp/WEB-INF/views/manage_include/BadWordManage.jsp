@@ -170,6 +170,32 @@ div.showWaring {
    }
 </script>
 
+   <script>
+      var getWarnCnt = 0;
+      
+      $(document).ready(function() {
+         var id = "";
+           id = $("#userId").val();
+           
+           console.log("레디 안 id : " + id);
+         
+         $.ajax({
+               url: "${pageContext.request.contextPath}/getLimitWarnCnt.do",
+               type: "post",
+               data : {id : id},
+               success: function(limitwarncount){ 
+                  console.log("getlimit id : " + id);
+                  getWarnCnt = limitwarncount;
+                  var txt = "비속어가 " + getWarnCnt + "회 감지될 경우, 채팅금지 상태가 됩니다.";
+                  document.getElementById('showtxt').innerHTML = txt;
+               },
+               error : function(XHR, status, error) {
+                   console.error(status + " : " + error);
+               }                   
+            });
+      });
+   </script>
+
 </head>
 
 <body>
@@ -232,7 +258,8 @@ div.showWaring {
                   <td><button type="button" class="btn" onclick="javascript:setwarn('${login.email}');">설정</button></td>
                </tr>
                <tr>
-                  <td colspan="2"><font color="lightgray"> 비속어가 3회 감지될 경우, 채팅금지 상태가 됩니다. </td>
+                  <td colspan="2"> <font color="lightgray"><span id="showtxt"></span></font> </td>
+<!--                   <font color="lightgray"> 비속어가 3회 감지될 경우, 채팅금지 상태가 됩니다. -->
                </tr>
             </table>
          </div>
@@ -245,7 +272,7 @@ div.showWaring {
       var number = 1;
       // 사용자 지정 비속어를 불러옴
       $(document).ready(function() {
-    	  var email = '${login.email}';
+         var email = '${login.email}';
          timer = setInterval(function() {
             //DB에 있는 전체 데이터 로딩 ()
             $.ajax({
@@ -276,7 +303,7 @@ div.showWaring {
          // $("#content").val(word); $("#addCustomBadwordForm").submit();         
          var email = inputEmail;
          var content = $("[name=inputBadword]").val();
-			
+         
          $('#inputBadword').val('');
          
          $.ajax({
@@ -300,11 +327,9 @@ div.showWaring {
          str += "   <tr class='wordtr'>";
          str += "     <tr class='wordtr'>";
          str += "         <td class='col-xs-1'>" + number + "</td>"
-         str += "         <td class='col-xs-10'>" + CustomBadwordVO.content
-               + "</td>";
+         str += "         <td class='col-xs-10'>" + CustomBadwordVO.content + "</td>";
          str += "            <td class='col-xs-1'>";
-         str += "            <button type='submit' class='btn btnright btnDelete' onclick='deleteWord("
-               + CustomBadwordVO.num + ");'></button>";
+         str += "            <button type='submit' class='btn btnright btnDelete' onclick='deleteWord("+ CustomBadwordVO.num + ");'></button>";
          str += "         </td>";
          str += "   </tr>"
          number++;
@@ -342,6 +367,8 @@ div.showWaring {
          var input = $("[name=inputCount]").val();
          var email = inputemail;
 //          alert(input);
+
+       var txt = "비속어가 " + input + "회 감지될 경우, 채팅금지 상태가 됩니다.";
          
          
          $.ajax({
@@ -361,6 +388,7 @@ div.showWaring {
          
          document.getElementById('showWarning').style.display = 'none';
          document.getElementById('awarn').style.display = 'flex';
+         document.getElementById('showtxt').innerHTML = txt;
 
       };
    </script>

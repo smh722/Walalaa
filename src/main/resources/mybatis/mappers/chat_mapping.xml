@@ -5,231 +5,135 @@
 
 
 <mapper namespace="ChatDAO">
-   <!-- 방 존재 여부 확인 & 방정보 가져오기 -->
-   <select id="getRoom" parameterType="java.lang.String" resultType="com.utf18.site.vo.ChatVO">
-  	   SELECT * FROM CHAT WHERE NAME =#{name} AND REMAINCOUNT !=0
-   </select>
-   
-   <!-- 세션ID / owner비교 -->
-   <select id="getChatOwner" resultType="com.utf18.site.vo.ChatVO">
-	   SELECT * FROM CHAT
-	   WHERE owner = #{owner} AND ROWNUM = 1
-	   ORDER BY NUM DESC
-   </select>
-   <!-- 세션ID / chatmember비교 -->
-   <select id="checkChatmember" resultType="com.utf18.site.vo.ChatVO">
-	   SELECT * FROM CHATMEMBER
-	   WHERE ID = #{id}
-   </select>
-  
-   <!-- 방 생성 -->
-   <insert id="createChatRoom" parameterType="com.utf18.site.vo.ChatVO">
-	   INSERT INTO CHAT (NUM, NAME, FILTERWORD, TOTALCOUNT,REMAINCOUNT, CONTENT, OWNER, THUMBNAIL, UPLOAD, VIEWS, UPLOADTIME, TAG)
-	   VALUES(CHAT_SEQ.NEXTVAL, #{name}, #{filterword},300, 0, #{content}, #{owner}, #{thumbnail}, '0', 0, sysdate, #{tag})
-   </insert>
-   
-   <!-- 존재하는 방 리스트가져오기 -->
-   <select id="getRoomList" resultType="com.utf18.site.vo.ChatVO">
-	   SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime FROM CHAT, USERS WHERE users.email=chat.owner AND CHAT.REMAINCOUNT !=0 AND CHAT.UPLOAD =0
-   </select>
-   
-   <!-- 현재 어떤 방에 들어가있는지 데이터추가하기 -->
-   <insert id="addRoomMember" parameterType="com.utf18.site.vo.ChatVO">
-   		INSERT INTO CHATMEMBER(NUM, ID, ROOM, PRIROOM, WARNINGCOUNT, CHATSTATUS) VALUES(CHAT_MEMBER_SEQ.NEXTVAL, #{id}, #{room}, #{priroom}, 0, 'NOMAL')
-   </insert>
-   
-   <!-- 현재 아이디가 어떤방에 들어가있는지 확인 -->
-   <select id="getRoomMember" parameterType="com.utf18.site.vo.ChatMemberVO" resultType="com.utf18.site.vo.ChatMemberVO">
-	   SELECT ID,ROOM,PRIROOM, WARNINGCOUNT
-	   FROM CHATMEMBER
-	   WHERE ID = #{id}
-   </select>
-   
-   <!-- 같은 방에 존재하는 사람정보 모두가져오기 -->
-   <select id="sameRoomList" parameterType="com.utf18.site.vo.ChatMemberVO" resultType="com.utf18.site.vo.ChatMemberVO">
-	   SELECT ID, ROOM, PRIROOM
-	   FROM CHATMEMBER
-	   WHERE ROOM=#{room}
-   </select>
-   
-   <!-- 방변경 -->
-   <update id="updateRoomMember" parameterType="com.utf18.site.vo.ChatMemberVO">
-   	  UPDATE CHATMEMBER SET ROOM = #{room} 
-   	  WHERE ID= #{id}
-   </update>
-   
-   <!-- 방정보 제거-->
-   <delete id="deleteRoomMember" parameterType="com.utf18.site.vo.ChatMemberVO">
-   	  DELETE FROM CHATMEMBER
-   	  WHERE ID=#{id}
-   </delete>
-   
-   <!-- 채팅방 입장 count증가 : Controller에서 처리-->
-   <update id="updateChatCountInc" parameterType="com.utf18.site.vo.ChatMemberVO">
-      UPDATE CHAT SET REMAINCOUNT = REMAINCOUNT + 1
-      WHERE NAME = #{name}
-   </update>
-   
-   <!-- 채팅방 입장 count감소 : Controller에서 처리-->
-   <update id="updateChatCountDec" parameterType="com.utf18.site.vo.ChatMemberVO">
-      UPDATE CHAT SET REMAINCOUNT = REMAINCOUNT - 1
-      WHERE NAME = #{name}
-   </update>
-   
-   <!-- 채팅방 삭제 : REMAINCOUNT가 0이되면 삭제한다. -->
-   <delete id="deleteChat">
-      DELETE FROM CHAT
-      WHERE REMAINCOUNT = 0
-   </delete>
-   
-   <!-- 검색한 방 리스트가져오기 -->
-   <select id="searchRoomList" resultType="com.utf18.site.vo.ChatMemberVO" parameterType="java.lang.String">
-   SELECT * FROM CHAT
-   WHERE REMAINCOUNT !=0 AND NAME LIKE '%'||#{name}||'%'
-   </select>
-   
-   <!-- 이미지(썸네일) 파일 추가하기 -->
-   <insert id="addThumbnail" parameterType="com.utf18.site.vo.ChatMemberVO">
-   INSERT INTO CHAT VALUES()
-   </insert>
-   
-   <!-- 방 정보 가져오기 -->
-   <select id="getRoomInfo" resultType="com.utf18.site.vo.ChatVO" parameterType="java.lang.String">
-   SELECT * FROM CHAT WHERE NAME = #{name}
-   </select>
-   <!-- 방 정보 가져오기 -->
-   <select id="getRoomInfoNumber" resultType="com.utf18.site.vo.ChatVO" parameterType="java.lang.Integer">
-   SELECT * FROM CHAT WHERE NUM = #{num}
-   </select>
-   
-   <!-- 채팅내용 chatlog DB에 삽입하기  -->
-   <insert id="addChatLog" parameterType="com.utf18.site.vo.ChatLogVO">
-   INSERT INTO CHATLOG(EMAIL, CONTENT, NUM) VALUES(#{email}, #{content}, #{num})
-   </insert>
-   
-   <select id="getChatLog" parameterType="java.lang.Integer" resultType="com.utf18.site.vo.ChatLogVO">
-   SELECT * FROM CHATLOG
-   WHERE NUM = #{num}
-   </select>
-   
-   <select id="getFilterword" parameterType="java.lang.String" resultType="java.lang.String">
-   SELECT FILTERWORD FROM CHAT
-   WHERE NAME = #{name}
-   </select>
-   
-   <update id="plusWarningCount" parameterType="java.lang.String">
-   UPDATE CHATMEMBER SET WARNINGCOUNT = WARNINGCOUNT + 1
-   WHERE ID = #{id}
-   </update>
-   
-   <select id="getWarningCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-   SELECT WARNINGCOUNT FROM CHATMEMBER WHERE ID = #{id}
-   </select>
-   
-   <update id="updateChatStatus" parameterType="java.lang.String">
-   UPDATE CHATMEMBER SET CHATSTATUS = 'NOCHAT'
-   WHERE ID= #{id}
-   </update>
-   
-   <select id="getChatStatus" parameterType="java.lang.String" resultType="java.lang.String">
-   SELECT CHATSTATUS FROM CHATMEMBER WHERE ID = #{id}
-   </select>
-   
-   <update id="updateBadwordStatus" parameterType="java.lang.String">
-   UPDATE CHATLOG SET BADWORD = '1'
-   WHERE ID = #{id}
-   </update>
-   
-   <select id="getTime"  resultType="java.lang.String">
-   SELECT TO_CHAR(SYSDATE, 'yyyymmddhh24miss') FROM DUAL
-   </select>
-   
-   <insert id="insertObj" parameterType="com.utf18.site.vo.ObjectionVO">
-   INSERT INTO objection(OBJNUM, CHATNUM, ID, CONTENT, APPROV_STATE, TIME) VALUES (OBJ_SEQ.NEXTVAL, #{chatnum}, #{id}, #{content}, '0', sysdate)
-   </insert>
-   
-   <select id="getObj" parameterType="java.lang.Integer" resultType="com.utf18.site.vo.ObjectionVO">
-   SELECT * FROM objection
-   WHERE CHATNUM = #{chatnum}
-   </select>
-   
-   <select id="getObjList" parameterType="java.lang.Integer" resultType="com.utf18.site.vo.ObjectionVO">
-   select objection.objnum, objection.chatnum, objection.id, users.nickname usersNickname, objection.content, chatmember.warningcount chatmemWarningCount, objection.approv_state, chatmember.chatstatus chatmemChatstatus, objection.time 
-   from users, objection, chatmember
-   where users.email = objection.id AND chatmember.id = objection.id AND CHATNUM = #{chatnum} ORDER BY objection.OBJNUM DESC
-   </select>
-  
-   <update id="objAccept" parameterType="java.lang.Integer">
-   UPDATE OBJECTION SET APPROV_STATE = '1'
-   WHERE OBJNUM = #{objnum}
-   </update>
-   
-   <update id="minusWarnCnt" parameterType="java.lang.String">
-   UPDATE CHATMEMBER SET WARNINGCOUNT = WARNINGCOUNT - 1 WHERE ID = #{id}
-   </update>
-   
-   <update id="returnChatStatus" parameterType="java.lang.String">
-   UPDATE CHATMEMBER SET CHATSTATUS = 'NOMAL'
-   WHERE ID= #{id}
-   </update>
-   
-   <update id="objReject" parameterType="java.lang.Integer">
-   UPDATE OBJECTION SET APPROV_STATE = '2'
-   WHERE OBJNUM = #{objnum}
-   </update>
-   
-   <select id="getObjNum" resultType="java.lang.String" parameterType="java.lang.Integer">
-   SELECT ID FROM OBJECTION WHERE OBJNUM = #{objnum}
-   </select>
-  
-  <update id="uploadChat" parameterType="com.utf18.site.vo.ChatVO">
-   UPDATE CHAT SET NAME = #{name}, CONTENT = #{content}, THUMBNAIL = #{thumbnail}, TAG = #{tag} UPLOAD = '1'
-   WHERE NUM = #{num}
-   </update>
-  
-   <select id="getUploadList" resultType="com.utf18.site.vo.ChatVO">
-  	   SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime FROM CHAT, USERS WHERE users.email=chat.owner and UPLOAD = '1'
-   </select>
-  
-	<select id = "getRoomOwner" parameterType="String" resultType="String">
-	SELECT OWNER FROM CHAT WHERE NAME = #{name}
+
+	<!-- 방 존재 여부 확인 & 방정보 가져오기 -->
+	<select id="getRoom" parameterType="java.lang.String" resultType="com.utf18.site.vo.ChatVO">
+		SELECT * FROM CHAT WHERE NAME =#{name} AND REMAINCOUNT !=0
 	</select>
-	
+
+	<!-- 세션ID / owner비교 -->
+	<select id="getChatOwner" resultType="com.utf18.site.vo.ChatVO">
+		SELECT * FROM CHAT
+		WHERE owner = #{owner} AND ROWNUM = 1
+		ORDER BY NUM DESC
+	</select>
+
+	<!-- 방 생성 -->
+	<insert id="createChatRoom"
+		parameterType="com.utf18.site.vo.ChatVO">
+		INSERT INTO CHAT (NUM, NAME, FILTERWORD, TOTALCOUNT,REMAINCOUNT, CONTENT, OWNER, THUMBNAIL, UPLOAD, VIEWS, UPLOADTIME, TAG) 
+		VALUES(CHAT_SEQ.NEXTVAL, #{name}, #{filterword},300, 0, #{content}, #{owner}, #{thumbnail}, '0', 0, sysdate, #{tag})
+	</insert>
+
+	<!-- 존재하는 방 리스트가져오기 -->
+	<select id="getRoomList" resultType="com.utf18.site.vo.ChatVO">
+		SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS,
+		USERS.PROFILE, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime
+		FROM CHAT, USERS WHERE users.email=chat.owner AND CHAT.REMAINCOUNT !=0 AND CHAT.UPLOAD =0
+	</select>
+
+	<!-- 채팅방 입장 count증가 : Controller에서 처리 -->
+	<update id="updateChatCountInc" parameterType="com.utf18.site.vo.ChatMemberVO">
+		UPDATE CHAT SET REMAINCOUNT = REMAINCOUNT + 1
+		WHERE NAME = #{name}
+	</update>
+
+	<!-- 채팅방 입장 count감소 : Controller에서 처리 -->
+	<update id="updateChatCountDec" parameterType="com.utf18.site.vo.ChatMemberVO">
+		UPDATE CHAT SET REMAINCOUNT = REMAINCOUNT - 1
+		WHERE NAME = #{name}
+	</update>
+
+	<!-- 채팅방 삭제 : REMAINCOUNT가 0이되면 삭제한다. -->
+	<delete id="deleteChat">
+		DELETE FROM CHAT WHERE REMAINCOUNT = 0
+	</delete>
+
+	<!-- 검색한 방 리스트가져오기 -->
+	<select id="searchRoomList" resultType="com.utf18.site.vo.ChatMemberVO" parameterType="java.lang.String">
+		SELECT * FROM CHAT WHERE REMAINCOUNT !=0 AND NAME LIKE '%'||#{name}||'%'
+	</select>
+
+	<!-- 방 정보 가져오기 -->
+	<select id="getRoomInfo" resultType="com.utf18.site.vo.ChatVO" parameterType="java.lang.String">
+		SELECT * FROM CHAT, USERS WHERE CHAT.NAME = #{name} AND CHAT.OWNER = USERS.EMAIL 
+	</select>
+
+	<!-- 방 정보 가져오기 -->
+	<select id="getRoomInfoNumber" resultType="com.utf18.site.vo.ChatVO" parameterType="java.lang.Integer">
+		SELECT * FROM CHAT WHERE NUM = #{num}
+	</select>
+
+	<!-- 사용하는 챗 필터 가져오기 -->
+	<select id="getFilterword" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT FILTERWORD FROM CHAT
+		WHERE NAME = #{name}
+	</select>
+
+	<!-- 현재 시간 가져오기 -->
+	<select id="getTime" resultType="java.lang.String">
+		SELECT TO_CHAR(SYSDATE, 'yyyymmddhh24miss') FROM DUAL
+	</select>
+
+	<!-- 실시간 영상을 업로드하기(기존 정보 바꾸기) -->
+	<update id="uploadChat" parameterType="com.utf18.site.vo.ChatVO">
+		UPDATE CHAT 
+		SET NAME = #{name}, CONTENT = #{content}, THUMBNAIL = #{thumbnail}, TAG = #{tag}, UPLOAD = '1'
+		WHERE NUM = #{num}
+	</update>
+
+	<!-- 업로드된 영상 리스트 가져오기 -->
+	<select id="getUploadList" resultType="com.utf18.site.vo.ChatVO">
+		SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS, USERS.PROFILE, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime 
+		FROM CHAT, USERS 
+		WHERE users.email=chat.owner and UPLOAD ='1'
+	</select>
+
+	<!-- 해당 방의 주인 가져오기 -->
+	<select id="getRoomOwner" parameterType="String" resultType="String">
+		SELECT OWNER FROM CHAT WHERE NAME = #{name}
+	</select>
+
 	<!-- 챗방번호를 통해 사람의 닉네임가져오기 -->
-   <select id="getCnnctPPL" parameterType="java.lang.Integer" resultType="com.utf18.site.vo.UserVO">
-   SELECT USERS.EMAIL, USERS.NICKNAME FROM USERS, CHAT, CHATMEMBER WHERE CHAT.NUM = #{NUM} AND chatmember.id = USERS.EMAIL
-   </select>
-   
-   <!-- 아이디를 통해서 유저정보 가져오기  -->
-   <select id="getUsersInfo" resultType="com.utf18.site.vo.UserVO" parameterType="java.lang.String">
-   SELECT * FROM USERS WHERE EMAIL = #{email}
-   </select>
-   
-   <!-- 선택된 블랙리스트 정보 업데이트  -->
-   <update id="updateBlackList" parameterType="com.utf18.site.vo.UserVO">
-   UPDATE USERS SET BLACKLIST = #{blacklist} WHERE EMAIL = #{email}
-   </update>
-   
-   <!-- 선택된 운영자리스트 정보 업데이트 -->
-   <update id="updateOperList" parameterType="com.utf18.site.vo.UserVO">
-   UPDATE USERS SET OPERLIST = #{operlist} WHERE EMAIL = #{email}
-   </update>
-  
-  <!-- 방의 조회수 증가 -->
-  <update id="incViews" parameterType="String">
-  UPDATE CHAT SET VIEWS = VIEWS + 1 WHERE NAME = #{name}
-  </update>
-  
-  <!-- 검색 결과 리스트  -->
-    <select id="getTagList" resultType="com.utf18.site.vo.ChatVO" parameterType="String">
-      SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME
-      usersNickname FROM CHAT, USERS
-      WHERE users.email=chat.owner
-      AND CHAT.TAG LIKE '%'||#{tag}||'%'
-      OR CHAT.NAME LIKE '%'||#{tag}||'%'
-      OR CHAT.CONTENT LIKE '%'||#{tag}||'%'
-      OR USERS.NICKNAME LIKE '%'||#{tag}||'%'
-   </select>
-  
-  
+	<select id="getCnnctPPL" parameterType="java.lang.Integer" resultType="com.utf18.site.vo.UserVO">
+		SELECT USERS.EMAIL, USERS.NICKNAME FROM USERS, CHAT, CHATMEMBER 
+		WHERE CHAT.NUM = #{NUM} AND chatmember.id = USERS.EMAIL
+	</select>
+
+	<!-- 아이디를 통해서 유저정보 가져오기 -->
+	<select id="getUsersInfo" resultType="com.utf18.site.vo.UserVO" parameterType="java.lang.String">
+		SELECT * FROM USERS WHERE EMAIL = #{email}
+	</select>
+
+	<!-- 선택된 블랙리스트 정보 업데이트 -->
+	<update id="updateBlackList" parameterType="com.utf18.site.vo.UserVO">
+		UPDATE USERS SET BLACKLIST = #{blacklist} WHERE EMAIL = #{email}
+	</update>
+
+	<!-- 선택된 운영자리스트 정보 업데이트 -->
+	<update id="updateOperList" parameterType="com.utf18.site.vo.UserVO">
+		UPDATE USERS SET OPERLIST = #{operlist} WHERE EMAIL = #{email}
+	</update>
+
+	<!-- 방의 조회수 증가 -->
+	<update id="incViews" parameterType="String">
+		UPDATE CHAT SET VIEWS = VIEWS + 1 WHERE NAME = #{name}
+	</update>
+
+	<!-- 검색 결과 리스트 -->
+	<select id="getTagList" resultType="com.utf18.site.vo.ChatVO" parameterType="String">
+		SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS, USERS.PROFILE, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime
+		FROM CHAT, USERS
+		WHERE users.email=chat.owner AND UPLOAD = '1' AND (CHAT.TAG LIKE '%'||#{tag}||'%' OR CHAT.NAME LIKE '%'||#{tag}||'%' OR CHAT.CONTENT LIKE '%'||#{tag}||'%' OR USERS.NICKNAME LIKE '%'||#{tag}||'%')
+	</select>
+
+	<!-- 내 채널 내 영상 리스트 받아오기(== 해당 유저의 영상 리스트 받아오기) -->
+	<select id="getMyUploadList" parameterType="String" resultType="com.utf18.site.vo.ChatVO">
+		SELECT CHAT.NUM, CHAT.NAME, CHAT.CONTENT, CHAT.THUMBNAIL, USERS.NICKNAME usersNickname, CHAT.VIEWS, USERS.PROFILE, TO_CHAR(CHAT.UPLOADTIME, 'MM-DD/HH24:MI') uploadtime
+		FROM CHAT, USERS
+		WHERE users.email=chat.owner AND email=#{email}
+	</select>
+
+
 </mapper>

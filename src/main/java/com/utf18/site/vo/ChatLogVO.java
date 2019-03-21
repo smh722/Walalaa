@@ -5,10 +5,21 @@ public class ChatLogVO {
 	private String content;
 	private String time;
 	private int num;
+	
+	//조인문
+	private String nickname;
+	private String profile;
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
 	public ChatLogVO() {
 	}
-
 
 	public ChatLogVO(String email, String content, int num) {
 		this.email = email;
@@ -55,4 +66,14 @@ public class ChatLogVO {
 	public void setNum(int num) {
 		this.num = num;
 	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+	
+	
 }

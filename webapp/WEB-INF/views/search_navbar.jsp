@@ -64,7 +64,10 @@
    
 /*    로그인했을 때 나오는 프로필 이미지(아이콘) */
    #btn_profile{
-   background: url(${pageContext.request.contextPath}/assets/images/user_login.png) center no-repeat #337ab7;
+   margin-top: -2px;
+   	background: url(${pageContext.request.contextPath}${login.profile});
+   	background-size: 40px;
+   	background-repeat: no-repeat;
    }
    
 /*    방송하기 버튼 호버 */
@@ -91,89 +94,92 @@
             alert("방송이 종료되었습니다");
       }
    </script>
+
+   
    <style type="text/css">
 body {
-	margin-top: 10px;
-	font-family: 'Jeju Gothic', sans-serif;
+   margin-top: 10px;
+   font-family: 'Jeju Gothic', sans-serif;
 }
 
 .navmenu {
-	margin-top: -3px;
-	width: 240px;
-	position: relative;
+   width: 240px;
+   position: relative;
+   vertical-align: middle;
 }
 
 .logo {
-	margin-right: 20px;
+   margin-right: 20px;
 }
 
 .topbar {
-	width: 1080px;
-	height: 45px;
-	display: flex;
-	margin: 0 auto;
+   width: 1080px;
+   height: 45px;
+   display: flex;
+   margin: 0 auto;
 }
 
 .dropdown {
-	display: inline-block;
+   display: flex;
 }
 
 ul {
-	list-style: none;
+   list-style: none;
 }
 
 hr {
-	margin-top: 3px;
+   margin-top: 3px;
 }
 
 /*       로고 이미지 확대를 위한  css       */
 .scale {
-	transform: scale(1);
-	-webkit-transform: scale(1);
-	-moz-transform: scale(1);
-	-ms-transform: scale(1);
-	-o-transform: scale(1);
-	transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
+   transform: scale(1);
+   -webkit-transform: scale(1);
+   -moz-transform: scale(1);
+   -ms-transform: scale(1);
+   -o-transform: scale(1);
+   transition: all 0.3s ease-in-out; /* 부드러운 모션을 위해 추가*/
 }
 
 /*       로고 이미지 호버시 확대        */
 .scale:hover {
-	transform: scale(1.2);
-	-webkit-transform: scale(1.2);
-	-moz-transform: scale(1.2);
-	-ms-transform: scale(1.2);
-	-o-transform: scale(1.2);
+   transform: scale(1.2);
+   -webkit-transform: scale(1.2);
+   -moz-transform: scale(1.2);
+   -ms-transform: scale(1.2);
+   -o-transform: scale(1.2);
 }
 
 .img_scale { /*width:325px; height:280px;*/
-	overflow: hidden
+   overflow: hidden
 } /* 부모를 벗어나지 않고 내부 이미지만 확대 */
 .userbtn {
-	width: 40px;
-	height: 40px;
-	padding-left: 0px;
-	padding-right: 0px;
-	color: #4682B4;
+   width: 40px;
+   height: 40px;
+   padding-left: 0px;
+   padding-right: 0px;
+   color: #4682B4;
 }
 
 .navbar-right {
-	float: right !important;
-	margin-right: -15px;
-	margin-top: 2px;
-	display: flex;
+   float: right !important;
+   margin-right: -15px;
+   margin-top: 2px;
+   display: flex;
 }
 
 .logintext {
-	margin: auto;
-	padding-left: 10px;
+   margin: auto;
+   padding-left: 10px;
+   margin-right: 1em;
 }
 
 .usernick {
-/* 	min-width: 10px !important; */
-/* 	max-width: 75% !important; */
-	transition: width 0.25s;
-	border: none;
-	margin-right: 20px;
+   min-width: 10px !important;  
+   max-width: 100% !important; 
+   transition: width 0.25s;
+   border: none;
+   font-size: 18px;
 }
 </style>
 
@@ -190,55 +196,61 @@ hr {
          </a>
       </div>
       
-            <div class="col-xs-8 searchbar">
+      <div class="col-xs-8 searchbar">
          <form id="searchForm" action="search_result.do" method="post">
-            <p><input type="text" id="tag" name="tag" class="searchtxt">
-            <button type="submit" value="     " class="searchbtn" ></button></p></form>
+         	<input type="text" id="tag" name="tag" class="searchtxt"><button type="submit" class="searchbtn" style="width: 45px;"></button>
+         </form>
+         
       </div>
       
       <div class="navmenu">
          <form class="navbar-form navbar-right">
-            <div id="login" class="logintext"> 
+            <div id="login" class="logintext" > 
                <a href="loginform.do">로그인</a> 
             </div> 
              
-            <div class="dropdown" id="usrimg">
-               <button id="btn_profile" class="btn dropdown-toggle userbtn btn-group" type="button" data-toggle="dropdown" style="padding-left: 1px; padding-right: 1px;">
-<%--                   <img alt="유저이미지" src="${pageContext.request.contextPath}/assets/images/user_login.png" width="30px"> --%>
-                  </button>
-                  <input class="usernick" type="text" value=${login.nickname} id="usernick" style="width: 51px;" readonly/>
+            <div class="dropdown" id="usrimg" style="margin-right:1em;" >
+               <button id="btn_profile" class="btn dropdown-toggle userbtn btn-group img-circle"
+                type="button" data-toggle="dropdown" style="padding-left: 1px; padding-right: 1px; width:44px; height:44px;"></button>
+                 <input class="usernick" type="text" value="${login.nickname}" id="usernick" style="margin-left:10px;" readonly/>
                   <ul class="dropdown-menu" style="left: 0;">
-                      <li><a href="mychannel.do">내 채널</a></li>
+                     <li><a href="mychannel.do">내 채널</a></li>
                      <li><a href="#">마이페이지</a></li>
                      <li><a href="logout.do">로그아웃</a></li>
                   </ul>
-            </div> 
+             </div> 
        
-       <div id="brStart" class="broadcast_img_swap">
-        <a href="broadcast_setting.do">
-              <img src="${pageContext.request.contextPath}/assets/images/video_icon2.png" height="40px">
-              <img src="${pageContext.request.contextPath}/assets/images/video_icon6.png" height="40px">
-        </a>
-       </div>
-       
-        
-            </form>
-                     
+           <div id="brStart" class="broadcast_img_swap">
+              <a href="broadcast_setting.do">
+                    <img src="${pageContext.request.contextPath}/assets/images/video_icon2.png" height="40px">
+                    <img src="${pageContext.request.contextPath}/assets/images/video_icon6.png" height="40px">
+              </a>
+           </div>
+         </form>          
       </div>
    </div>
+
+   <script>
+      var usernick = document.getElementById('usernick');
+      var nickleng = document.getElementById('usernick').value.length;
+
+      var inputWidth = nickleng;
+      inputWidth = inputWidth + "em";
+      
+      usernick.style.width = inputWidth;
+             
+   </script>
 
 <hr>
    <script type="text/javascript">
       $(document).ready(function(){
          var email = "${login.email}";
-         console.log("ready() email : " + email);
             //데이타요청
             $.ajax({
                url : "checkChatmember.do",
                type : "post",
                data: email,
                success : function(data){
-                  console.log("function success");
                   if(data == 0){
                      console.log("방송 안함");
                     $("#brStart").show();
@@ -271,9 +283,6 @@ hr {
       
       
    </script>
-   
-   
-
 </body>
 
 </html>

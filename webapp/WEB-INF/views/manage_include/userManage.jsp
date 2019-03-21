@@ -65,12 +65,12 @@
       var str_bl = "";   // 방송자의 블랙리스트 그리기 용
       var str_op = "";   // 방송자의 운영자 그리기용
       var id = '${login.email}';
-      var ajaxpaused = false;
+      var timerPaused2 = false;
       
       $(document).ready(function() {
          var num = $("#roomNum").val();
          timer = setInterval( function () {
-         if(!ajaxpaused){
+         if(!timerPaused2){
             $.ajax({
                url: "${pageContext.request.contextPath}/getCnntPPL.do",
                type: "post",
@@ -94,12 +94,13 @@
                data: {id : id},
                success: function(info){
                   str_bl = "";
-                  
-                  for(var i=0; i<info.length; i++){
-                     showBlacklist(info[i]);
-                  }
                   $("#showBlacklist").empty();
-                  $("#showBlacklist").append(str_bl);
+                  if(info[0]!=null){
+	                  for(var i=0; i<info.length; i++){
+	                     showBlacklist(info[i]);
+	                  }
+	                  $("#showBlacklist").append(str_bl);
+                  }
                }, error : function(XHR, status, error) {
                       console.error(status + " : " + error);
                }  
@@ -111,27 +112,29 @@
                 data: {id : id},
                 success: function(info){
                    str_op = "";
-                   
-                   for(var i=0; i<info.length; i++){
-                      showOperList(info[i]);
+                   if(info[0]!=null){
+	                   $("#showOperList").empty();
+	                   for(var i=0; i<info.length; i++){
+	                      showOperList(info[i]);
+	                   }
+	                   $("#showOperList").append(str_op);
                    }
-                   $("#showOperList").empty();
-                   $("#showOperList").append(str_op);
                 }, error : function(XHR, status, error) {
                        console.error(status + " : " + error);
                 }  
              });
          }
-         }, 3000);   //5초에 한번
+         }, 1000);   //5초에 한번
+         
          function showPPL(userVOs) {
            if(userVOs.email != id) {
                str_ppl += " <div class='dropposition'>";
-               str_ppl += "   <button class='btn dropdown-toggle btn-group btn_color' onclick='pause()' type='button' data-toggle='dropdown' > ";
+               str_ppl += "   <button class='btn dropdown-toggle btn-group btn_color pause' type='button' data-toggle='dropdown' > ";
                str_ppl +=       userVOs.nickname;
                str_ppl += "      <span class='caret'> </span>";
                str_ppl += "   </button>";
                str_ppl += "   <ul class='dropdown-menu' id='dropvalue' >";
-               str_ppl += "      <li><a href='manage_user_chatting.do'>채팅 모아보기</a></li>";
+               str_ppl += "      <li><a href='#' data-value='userchat' data-email='"+userVOs.email+"'>채팅 모아보기</a></li>";
                str_ppl += "      <li class='divider'></li>";
                str_ppl += "      <li><a href='#' data-value='black' data-email='"+userVOs.email+"' >블랙리스트 추가</a></li>";
                str_ppl += "      <li><a href='#' data-value='oper' data-email='"+userVOs.email+"' >운영자 추가</a></li>";
@@ -174,7 +177,7 @@
    <input type="hidden" id="roomNum" name="roomNum" value="${roomNum}" />
    
          
-   <div class="backgr">
+   <div id="backgr" class="backgr">
       <div class="divsize">
          <div class="header">
             <label class="labeltxt">현재 접속중</label>
@@ -231,6 +234,7 @@
                }   
          });
       }
+
       function deleteOList(email, delOList) {
          $.ajax({
             type: "post",
@@ -245,13 +249,21 @@
       }
    </script>
    <script>
-      function pause(){
-         ajaxpaused = true;
-      }
-      function start(){
-         ajaxpaused = false;
-      }
-   </script>
+	var ajaxstatus2 = 0;
+	    $("#backgr").on('click', '.pause', function() {   
+	    	timerPaused2 = true;
+	    	setTimeout(function(){
+				ajaxstatus2 = 1;
+	    	}, 1000);
+	      });
+	   	
+	   	$("#backgr").on('click', function(){
+	   		if(ajaxstatus2==1){
+	   			timerPaused2 = false;
+	   			ajaxstatus2 =0;
+	   		}
+	   	});
+	</script>
    <script>
    
       $(document).on('click', '.dropdown-menu li a', function() {   
@@ -260,15 +272,17 @@
          var value = $this.data("value");
          var num = ${roomNum};
          
-         start();
-         
-         $.ajax({
-            type: "post",
-            url: "${pageContext.request.contextPath}/listupdate.do",
-            data : {email:email, value:value, num : num},
-            success : function() {
-            }
-         });
+         if(value === 'userchat') {
+             window.open("userchatlog.do?email="+email, "유저채팅", "toolbar = 0, scrollbars = 1, statusbar = 0, menubar = 0, resizable = 0, width=1080px, height=500px, left= 300, top= 200");
+          } else {
+	         $.ajax({
+	            type: "post",
+	            url: "${pageContext.request.contextPath}/listupdate.do",
+	            data : {email:email, value:value, num : num},
+	            success : function() {
+	            }
+	         });
+          }
       });
    
    

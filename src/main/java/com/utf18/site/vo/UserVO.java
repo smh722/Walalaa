@@ -10,7 +10,34 @@ public class UserVO {
 	private String blacklist;
 	private String operlist;
 	private String subscribe;
-	
+	private String profile;
+	private String bgimg;
+	private String channelInfo;
+
+	public String getChannelInfo() {
+		return channelInfo;
+	}
+
+	public void setChannelInfo(String channelInfo) {
+		this.channelInfo = channelInfo;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public String getBgimg() {
+		return bgimg;
+	}
+
+	public void setBgimg(String bgimg) {
+		this.bgimg = bgimg;
+	}
+
 	public int getApply() {
 		return apply;
 	}

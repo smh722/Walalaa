@@ -25,7 +25,7 @@ public class ChatMemberVO implements Serializable {
 
 	public ChatMemberVO() {
 	}
-	
+
 	public ChatMemberVO(int num, String id, String room, String priroom, int warningCnt) {
 		this.num = num;
 		this.id = id;
@@ -81,7 +81,7 @@ public class ChatMemberVO implements Serializable {
 	public void setWarningCnt(int warningCnt) {
 		this.warningCnt = warningCnt;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ChatMemberVO [num=" + num + ", id=" + id + ", room=" + room + ", priroom=" + priroom + ", warningCnt="
